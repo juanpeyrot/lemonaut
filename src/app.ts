@@ -1,7 +1,6 @@
 import { createServer, IncomingMessage, ServerResponse } from "http";
 import { match, MatchFunction } from "path-to-regexp";
-
-type Handler = (req: IncomingMessage, res: ServerResponse) => void | Promise<void>;
+import { Handler, Middleware } from "./types";
 
 type RouteKey = string;
 type RouteMap = Map<RouteKey, Handler[]>;
@@ -44,8 +43,11 @@ const App = (): AppInstance => {
     routes.set(`${path}/DELETE`, [...currentHandlers, ...handlers]);
   };
 
-  const parseURLToRouteMap = (url: string | undefined, method: string | undefined) => {
-		if (!url || !method) return "";
+  const parseURLToRouteMap = (
+    url: string | undefined,
+    method: string | undefined
+  ) => {
+    if (!url || !method) return "";
     const urlParams = url.split("/").slice(1);
 
     const [lastParam] = urlParams[urlParams.length - 1].split("?");
@@ -72,16 +74,33 @@ const App = (): AppInstance => {
     return false;
   };
 
-  const serverHandler = async (request: IncomingMessage, response: ServerResponse) => {
-    const parsedUrl = parseURLToRouteMap(request.url, request.method);
+  const dispatchChain = (request: IncomingMessage, response: ServerResponse, middlewares: Middleware[]) => {
+    return invokeMiddlewares(request, response, middlewares);
+  };
 
-    const match = matchUrl(parsedUrl);
+  const invokeMiddlewares = async (request: IncomingMessage, response: ServerResponse, middlewares: Middleware[]) => {
+    if (!middlewares.length) return;
+
+    const currentMiddleware = middlewares[0];
+
+    return currentMiddleware(request, response, async () => {
+      await invokeMiddlewares(request, response, middlewares.slice(1));
+    });
+  };
+
+  const serverHandler = async (
+    request: IncomingMessage,
+    response: ServerResponse
+  ) => {
+    const sanitizedUrl = parseURLToRouteMap(request.url, request.method);
+
+    const match = matchUrl(sanitizedUrl);
 
     if (match) {
       const middlewaresAndControllers = routes.get(match);
-      console.log(middlewaresAndControllers);
-      response.statusCode = 200;
-      response.end("Found");
+      if (middlewaresAndControllers) {
+				await dispatchChain(request, response, [...middlewaresAndControllers]);
+			}
     } else {
       response.statusCode = 404;
       response.end("Not found");
