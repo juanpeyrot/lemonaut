@@ -1,11 +1,11 @@
-import { createServer, IncomingMessage, ServerResponse } from "http";
+import { createServer } from "http";
 import { match, MatchFunction } from "path-to-regexp";
 import { Handler, Middleware } from "./types";
 import RequestDecorator, { DecoratedRequest } from "./request";
 import ResponseDecorator, { DecoratedResponse } from "./response";
 
 type RouteKey = string;
-type RouteMap = Map<RouteKey, Handler[]>;
+type RouteMap = Map<RouteKey, Middleware[]>;
 
 interface AppInstance {
   run: (port: number) => void;
@@ -17,8 +17,7 @@ interface AppInstance {
 }
 
 const App = (): AppInstance => {
-  
-	const routes: RouteMap = new Map();
+  const routes: RouteMap = new Map();
 
   const createMyServer = () =>
     createServer(async (req, res) => {
@@ -30,7 +29,7 @@ const App = (): AppInstance => {
 
   const get = (path: string, ...handlers: Handler[]) => {
     const currentHandlers = routes.get(`${path}/GET`) || [];
-    routes.set(`${path}/GET`, [...currentHandlers, ...handlers]);
+		routes.set(`${path}/GET`, [...currentHandlers, ...handlers]);
   };
 
   const post = (path: string, ...handlers: Handler[]) => {
@@ -51,6 +50,24 @@ const App = (): AppInstance => {
   const del = (path: string, ...handlers: Handler[]) => {
     const currentHandlers = routes.get(`${path}/DELETE`) || [];
     routes.set(`${path}/DELETE`, [...currentHandlers, ...handlers]);
+  };
+
+  const middlewaresForAll: Middleware[] = [];
+
+  const use = (path: string, ...middlewares: Middleware[]) => {
+    const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
+    const possiblePaths = methods.map((method) => `${path}/${method}`);
+
+    possiblePaths.forEach((route) => {
+      const existingHandlers = routes.get(route) || [];
+      if (existingHandlers.length) {
+        routes.set(route, [...middlewares, ...existingHandlers]);
+      }
+    });
+  };
+
+  const useAll = (...middlewares: Middleware[]) => {
+    middlewaresForAll.push(...middlewares);
   };
 
   const parseURLToRouteMap = (

@@ -1,4 +1,3 @@
-import { IncomingMessage, ServerResponse } from "http";
 import { DecoratedRequest } from "../request";
 import { DecoratedResponse } from "../response";
 
