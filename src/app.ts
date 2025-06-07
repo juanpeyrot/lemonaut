@@ -1,9 +1,9 @@
 import { createServer } from "http";
-import { Handler, Middleware, RouteHandler } from "./types";
+import { Handler, Middleware } from "./types";
 import RequestDecorator, { DecoratedRequest } from "./request";
 import ResponseDecorator, { DecoratedResponse } from "./response";
 import Router, { RouterInstance } from "./router";
-import { matchUrl } from "./utils";
+import { dispatchChain, matchUrl } from "./utils";
 
 interface AppInstance {
   get: (path: string, ...handlers: Handler[]) => void;
@@ -32,35 +32,6 @@ const App = (): AppInstance => {
     urlParams.splice(urlParams.length - 1, 1);
     const allParams = [...urlParams, lastParam].join("/");
     return `/${allParams}/${method.toUpperCase()}`;
-  };
-
-  const dispatchChain = (
-    request: DecoratedRequest,
-    response: DecoratedResponse,
-    handlers: RouteHandler[]
-  ): Promise<void> => {
-    return invokeHandlers(request, response, handlers, 0);
-  };
-
-  const invokeHandlers = async (
-    request: DecoratedRequest,
-    response: DecoratedResponse,
-    handlers: RouteHandler[],
-    index: number
-  ): Promise<void> => {
-    if (index >= handlers.length) return;
-
-    const current = handlers[index];
-
-    if (current.length === 3) {
-      const middleware = current as Middleware;
-      await middleware(request, response, () =>
-        invokeHandlers(request, response, handlers, index + 1)
-      );
-    } else {
-      const handler = current as Handler;
-      await handler(request, response);
-    }
   };
 
   const useRouter = (base: string, router: RouterInstance) => {

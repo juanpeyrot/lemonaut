@@ -45,7 +45,6 @@ const Router = (): RouterInstance => {
   };
 
   const get = (path: string, ...handlers: Handler[]) => {
-		console.log(routes.entries())
     const key = `${path}/GET`;
     const existing = routes.get(key) || [];
     routes.set(key, [...existing, ...handlers]);
