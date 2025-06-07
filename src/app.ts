@@ -1,6 +1,8 @@
 import { createServer, IncomingMessage, ServerResponse } from "http";
 import { match, MatchFunction } from "path-to-regexp";
 import { Handler, Middleware } from "./types";
+import RequestDecorator, { DecoratedRequest } from "./request";
+import ResponseDecorator, { DecoratedResponse } from "./response";
 
 type RouteKey = string;
 type RouteMap = Map<RouteKey, Handler[]>;
@@ -15,8 +17,16 @@ interface AppInstance {
 }
 
 const App = (): AppInstance => {
-  const routes: RouteMap = new Map();
-  const createMyServer = () => createServer(serverHandler.bind(this));
+  
+	const routes: RouteMap = new Map();
+
+  const createMyServer = () =>
+    createServer(async (req, res) => {
+      const decoratedReq = req as DecoratedRequest;
+      const decoratedRes = res as DecoratedResponse;
+
+      await serverHandler(decoratedReq, decoratedRes);
+    });
 
   const get = (path: string, ...handlers: Handler[]) => {
     const currentHandlers = routes.get(`${path}/GET`) || [];
@@ -74,11 +84,19 @@ const App = (): AppInstance => {
     return false;
   };
 
-  const dispatchChain = (request: IncomingMessage, response: ServerResponse, middlewares: Middleware[]) => {
+  const dispatchChain = (
+    request: DecoratedRequest,
+    response: DecoratedResponse,
+    middlewares: Middleware[]
+  ) => {
     return invokeMiddlewares(request, response, middlewares);
   };
 
-  const invokeMiddlewares = async (request: IncomingMessage, response: ServerResponse, middlewares: Middleware[]) => {
+  const invokeMiddlewares = async (
+    request: DecoratedRequest,
+    response: DecoratedResponse,
+    middlewares: Middleware[]
+  ) => {
     if (!middlewares.length) return;
 
     const currentMiddleware = middlewares[0];
@@ -89,8 +107,8 @@ const App = (): AppInstance => {
   };
 
   const serverHandler = async (
-    request: IncomingMessage,
-    response: ServerResponse
+    request: DecoratedRequest,
+    response: DecoratedResponse
   ) => {
     const sanitizedUrl = parseURLToRouteMap(request.url, request.method);
 
@@ -99,8 +117,12 @@ const App = (): AppInstance => {
     if (match) {
       const middlewaresAndControllers = routes.get(match);
       if (middlewaresAndControllers) {
-				await dispatchChain(request, response, [...middlewaresAndControllers]);
-			}
+        await dispatchChain(request, response, [
+          RequestDecorator.bind(null, routes.keys()),
+          ResponseDecorator,
+          ...middlewaresAndControllers,
+        ]);
+      }
     } else {
       response.statusCode = 404;
       response.end("Not found");
