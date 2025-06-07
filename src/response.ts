@@ -34,7 +34,7 @@ const ResponseDecorator = (
 
   customRes.render = async (templatePath: string, data: any): Promise<void> => {
 
-  };
+  }
 
   next();
 };
