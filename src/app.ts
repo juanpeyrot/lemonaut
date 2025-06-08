@@ -1,13 +1,14 @@
 import { createServer } from "http";
-import { Handler, Middleware, RouteHandler } from "./types";
+import { Handler, Middleware } from "./types";
 import RequestDecorator, { DecoratedRequest } from "./request";
 import ResponseDecorator, { DecoratedResponse } from "./response";
 import Router, { RouterInstance } from "./router";
 import { dispatchChain, matchUrl } from "./utils";
 import { readdir } from "fs/promises";
 import path from "path";
-import { createReadStream, statSync } from "fs";
-import { pipeline } from "stream";
+import fs, { createReadStream } from "fs";
+import { pipeline } from "stream/promises";
+import mime from "mime-types";
 
 export interface AppInstance {
   get: (path: string, ...handlers: Handler[]) => void;
@@ -24,8 +25,6 @@ export interface AppInstance {
 
 const App = (): AppInstance => {
   const internalRouter = Router();
-
-  const globalMiddlewares: Middleware[] = [];
 
   const parseURLToRouteMap = (
     url: string | undefined,
@@ -83,35 +82,61 @@ const App = (): AppInstance => {
   };
 
   async function* getAllStaticFiles(folder: string): AsyncGenerator<string> {
-  const entries = await readdir(folder, { withFileTypes: true });
+    const entries = await readdir(folder, { withFileTypes: true });
 
-  for (const entry of entries) {
-    const fullPath = path.join(folder, entry.name);
-    if (entry.isDirectory()) {
-      yield* getAllStaticFiles(fullPath);
-    } else {
-      yield fullPath;
+    for (const entry of entries) {
+      const fullPath = path.join(folder, entry.name);
+      if (entry.isDirectory()) {
+        yield* getAllStaticFiles(fullPath);
+      } else {
+        yield fullPath;
+      }
     }
   }
-}
 
-  const serveStatic = async (folderPath: string) => {
+  const serveStatic = async function (this: any, folderPath: string) {
     const absoluteBasePath = path.resolve(folderPath);
 
     for await (const file of getAllStaticFiles(absoluteBasePath)) {
-      const relativePath = path.relative(absoluteBasePath, file);
-      const routePath = "/" + relativePath.replace(/\\/g, "/");
+      const relativePath = path
+        .relative(absoluteBasePath, file)
+        .replace(/\\/g, "/");
+      const routePath = "/" + relativePath;
 
-      internalRouter.get(routePath, async (req, res) => {
-        const fileStream = createReadStream(file);
-        res.setHeader("Content-Type", file.split(".").pop() || "text/plain");
-        await new Promise((resolve, reject) =>
-          pipeline(fileStream, res, (err) =>
-            err ? reject(err) : resolve(null)
-          )
-        );
-        (req as any)._wasHandled = true;
-      });
+      internalRouter.get(
+        routePath,
+        async (req: DecoratedRequest, res: DecoratedResponse) => {
+          try {
+            let stats;
+            try {
+              stats = fs.statSync(file);
+            } catch {
+              res.statusCode = 404;
+              res.end("Not Found");
+              return;
+            }
+
+            const mimeType = mime.lookup(file) || "application/octet-stream";
+
+            const etag = `${stats.size}-${stats.mtimeMs}`;
+
+            res.setHeader("Content-Type", mimeType);
+            res.setHeader("ETag", etag);
+
+            if (req.headers["if-none-match"] === etag) {
+              res.statusCode = 304;
+              res.end();
+              return;
+            }
+
+            const fileStream = createReadStream(file);
+            await pipeline(fileStream, res);
+          } catch (error) {
+            res.statusCode = 500;
+            res.end("Internal Server Error");
+          }
+        }
+      );
     }
   };
 
@@ -133,7 +158,7 @@ const App = (): AppInstance => {
     use: internalRouter.use,
     useAll: internalRouter.useAll,
     useRouter,
-    serveStatic,
+    serveStatic: serveStatic,
     run,
   };
 };
