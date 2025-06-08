@@ -75,7 +75,7 @@ const App = (): AppInstance => {
       ]);
     } else {
       await dispatchChain(request, response, commonHandlers);
-      if (!response.writableEnded) {
+      if (!(request as any)._wasHandled && !response.writableEnded) {
         response.statusCode = 404;
         response.end("Not Found");
       }
@@ -83,34 +83,32 @@ const App = (): AppInstance => {
   };
 
   async function* getAllStaticFiles(folder: string): AsyncGenerator<string> {
-    const entries = await readdir(folder, { withFileTypes: true });
+  const entries = await readdir(folder, { withFileTypes: true });
 
-    for (const entry of entries) {
-      const fullPath = path.join(folder, entry.name);
-
-      if (entry.isDirectory()) {
-        yield* getAllStaticFiles(fullPath);
-      } else {
-        yield fullPath;
-      }
+  for (const entry of entries) {
+    const fullPath = path.join(folder, entry.name);
+    if (entry.isDirectory()) {
+      yield* getAllStaticFiles(fullPath);
+    } else {
+      yield fullPath;
     }
   }
+}
 
   const serveStatic = async (folderPath: string) => {
-    const absoluteBase = path.resolve(folderPath);
+    const absoluteBasePath = path.resolve(folderPath);
 
-    for await (const file of getAllStaticFiles(absoluteBase)) {
-      const pathWithoutBase = file.replace(absoluteBase, "");
-      const routePath = pathWithoutBase.startsWith("/")
-        ? pathWithoutBase
-        : "/" + pathWithoutBase;
+    for await (const file of getAllStaticFiles(absoluteBasePath)) {
+      const relativePath = path.relative(absoluteBasePath, file);
+      const routePath = "/" + relativePath.replace(/\\/g, "/");
 
       internalRouter.get(routePath, async (req, res) => {
-        const stream = createReadStream(file);
-        const ext = path.extname(file).slice(1) || "text/plain";
-        res.setHeader("Content-Type", ext);
-        await new Promise<void>((resolve, reject) =>
-          pipeline(stream, res, (err) => (err ? reject(err) : resolve()))
+        const fileStream = createReadStream(file);
+        res.setHeader("Content-Type", file.split(".").pop() || "text/plain");
+        await new Promise((resolve, reject) =>
+          pipeline(fileStream, res, (err) =>
+            err ? reject(err) : resolve(null)
+          )
         );
         (req as any)._wasHandled = true;
       });
