@@ -10,7 +10,7 @@ export interface RouterInstance {
   put: (path: string, ...handlers: Handler[]) => void;
   patch: (path: string, ...handlers: Handler[]) => void;
   delete: (path: string, ...handlers: Handler[]) => void;
-  use: (path: string, ...handlers: Middleware[]) => void;
+  use: (...args: [Middleware] | [string, ...Middleware[]]) => void;
   useAll: (...handlers: Middleware[]) => void;
   getRoutes: () => RouteMap;
   getMiddlewaresForAll: () => Middleware[];
@@ -27,7 +27,19 @@ const Router = (): RouterInstance => {
     middlewaresForAll.push(...middlewares);
   };
 
-  const use = (path: string, ...middlewares: Middleware[]): void => {
+  const use = (...args: [Middleware] | [string, ...Middleware[]]) => {
+    let path: string;
+    let middlewares: Middleware[];
+
+    if (typeof args[0] === "string") {
+      path = args[0];
+      middlewares = args.slice(1) as Middleware[];
+    } else {
+      path = "";
+      middlewares = args as Middleware[];
+    }
+		
+
     const possiblePaths = [
       `${path}/GET`,
       `${path}/POST`,
