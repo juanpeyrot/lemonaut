@@ -28,32 +28,25 @@ const Router = (): RouterInstance => {
   };
 
   const use = (...args: [Middleware] | [string, ...Middleware[]]) => {
-    let path: string;
-    let middlewares: Middleware[];
-
     if (typeof args[0] === "string") {
-      path = args[0];
-      middlewares = args.slice(1) as Middleware[];
-    } else {
-      path = "";
-      middlewares = args as Middleware[];
-    }
-		
+      const path = args[0];
+      const middlewares = args.slice(1) as Middleware[];
+      const possiblePaths = [
+        `${path}/GET`,
+        `${path}/POST`,
+        `${path}/PUT`,
+        `${path}/PATCH`,
+        `${path}/DELETE`,
+      ];
 
-    const possiblePaths = [
-      `${path}/GET`,
-      `${path}/POST`,
-      `${path}/PUT`,
-      `${path}/PATCH`,
-      `${path}/DELETE`,
-    ];
-
-    possiblePaths.forEach((route) => {
-      const existingHandlers = routes.get(route) || [];
-      if (existingHandlers.length) {
+      possiblePaths.forEach((route) => {
+        const existingHandlers = routes.get(route) || [];
         routes.set(route, [...middlewares, ...existingHandlers]);
-      }
-    });
+      });
+    } else {
+      const middlewares = args as Middleware[];
+      middlewaresForAll.push(...middlewares);
+    }
   };
 
   const get = (path: string, ...handlers: Handler[]) => {

@@ -7,6 +7,7 @@ type Query = Record<string, string>;
 export interface DecoratedRequest extends IncomingMessage {
   params?: Params;
   query?: Query;
+	body?: string | Record<string, any>;
 }
 
 type MiddlewareWithRoutes = (

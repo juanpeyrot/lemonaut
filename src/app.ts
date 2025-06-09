@@ -1,12 +1,12 @@
 import { createServer } from "http";
 import { Handler, Middleware } from "./types";
-import RequestDecorator, { DecoratedRequest } from "./request";
-import ResponseDecorator, { DecoratedResponse } from "./response";
+import RequestDecorator, { DecoratedRequest } from "./middlewares/request";
+import ResponseDecorator, { DecoratedResponse } from "./middlewares/response";
 import Router, { RouterInstance } from "./router";
 import { dispatchChain, matchUrl } from "./utils";
 import { readdir } from "fs/promises";
-import path from "path";
 import fs, { createReadStream } from "fs";
+import path from "path";
 import { pipeline } from "stream/promises";
 import mime from "mime-types";
 

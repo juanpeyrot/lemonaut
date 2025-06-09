@@ -1,5 +1,5 @@
-import { DecoratedRequest } from "../request";
-import { DecoratedResponse } from "../response";
+import { DecoratedRequest } from "../middlewares/request";
+import { DecoratedResponse } from "../middlewares/response";
 
 export type Handler = (
   req: DecoratedRequest,

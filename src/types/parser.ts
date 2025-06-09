@@ -1,0 +1,1 @@
+export type Parser = (contentType: string, rawBody: string) => any | undefined;
