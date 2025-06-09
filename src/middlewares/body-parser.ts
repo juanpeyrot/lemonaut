@@ -15,7 +15,6 @@ export const BodyParserMiddleware = async (
   }
 
   const rawBody = Buffer.concat(chunks).toString();
-	console.log("Raw body:", rawBody);
   const contentType = req.headers["content-type"] || "";
 
   const parsers = getRegisteredParsers();
