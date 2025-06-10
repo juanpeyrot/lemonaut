@@ -9,6 +9,7 @@ export interface Request extends IncomingMessage {
   params?: Params;
   query?: Query;
   body?: string | Record<string, any>;
+	cookies?: Record<string, string>;
 }
 
 type MiddlewareWithRoutes = (
