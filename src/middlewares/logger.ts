@@ -2,7 +2,7 @@ import { Request } from "./request";
 import { Response } from "./response";
 import { Middleware, NextFunction } from "../types";
 
-export const LoggerMiddleware: Middleware = (
+export const Logger: Middleware = (
   req: Request,
   _res: Response,
   next: NextFunction

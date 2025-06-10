@@ -3,7 +3,7 @@ import { Middleware, NextFunction } from "../types";
 import { Request } from "./request";
 import { Response } from "./response";
 
-export const BodyParserMiddleware: Middleware = async (
+export const BodyParser: Middleware = async (
   req: Request,
   res: Response,
   next: NextFunction

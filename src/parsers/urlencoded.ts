@@ -1,5 +1,5 @@
 import { Request, Response } from "../middlewares";
-import { NextFunction } from "../types";
+import { Middleware, NextFunction } from "../types";
 import { Parser } from "../types";
 import { registerParser } from "./registry";
 import qs from "qs";
@@ -10,7 +10,7 @@ const URLEncodedParserImpl: Parser = (contentType, rawBody) => {
   }
 };
 
-export const URLEncodedParser = () => {
+export const URLEncodedParser = (): Middleware => {
   registerParser(URLEncodedParserImpl);
   return (_req: Request, _res: Response, next: NextFunction) => {
     next();
