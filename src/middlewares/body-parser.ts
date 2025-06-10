@@ -1,11 +1,11 @@
 import { getRegisteredParsers } from "../parsers/registry";
 import { NextFunction } from "../router";
-import { DecoratedRequest } from "./request";
-import { DecoratedResponse } from "./response";
+import { Request } from "./request";
+import { Response } from "./response";
 
 export const BodyParserMiddleware = async (
-  req: DecoratedRequest,
-  res: DecoratedResponse,
+  req: Request,
+  res: Response,
   next: NextFunction
 ) => {
   const chunks: Buffer[] = [];

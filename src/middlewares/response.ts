@@ -5,8 +5,8 @@ import path from "path";
 
 type NextFunction = () => void;
 
-export interface DecoratedResponse extends ServerResponse {
-  status: (code: number) => DecoratedResponse;
+export interface Response extends ServerResponse {
+  status: (code: number) => Response;
   json: (data: any) => void;
   send: (data: any) => Promise<void>;
   render: (templatePath: string, data: any) => Promise<void>;
@@ -17,9 +17,9 @@ const ResponseDecorator = (
   res: ServerResponse,
   next: NextFunction
 ): void => {
-  const customRes: DecoratedResponse = res as DecoratedResponse;
+  const customRes: Response = res as Response;
 
-  customRes.status = (status: number): DecoratedResponse => {
+  customRes.status = (status: number): Response => {
     customRes.statusCode = status;
     return customRes;
   };

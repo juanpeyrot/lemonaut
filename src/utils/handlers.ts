@@ -1,18 +1,18 @@
-import { DecoratedRequest } from "../middlewares/request";
-import { DecoratedResponse } from "../middlewares/response";
+import { Request } from "../middlewares/request";
+import { Response } from "../middlewares/response";
 import { Handler, Middleware, RouteHandler } from "../types";
 
 export const dispatchChain = (
-  request: DecoratedRequest,
-  response: DecoratedResponse,
+  request: Request,
+  response: Response,
   handlers: RouteHandler[]
 ): Promise<void> => {
   return invokeHandlers(request, response, handlers, 0);
 };
 
 export const invokeHandlers = async (
-  request: DecoratedRequest,
-  response: DecoratedResponse,
+  request: Request,
+  response: Response,
   handlers: RouteHandler[],
   index: number
 ): Promise<void> => {

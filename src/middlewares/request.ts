@@ -5,7 +5,7 @@ import { parse } from "url";
 type Params = Record<string, string>;
 type Query = Record<string, string | string[]>;
 
-export interface DecoratedRequest extends IncomingMessage {
+export interface Request extends IncomingMessage {
   params?: Params;
   query?: Query;
   body?: string | Record<string, any>;
@@ -13,7 +13,7 @@ export interface DecoratedRequest extends IncomingMessage {
 
 type MiddlewareWithRoutes = (
   routes: IterableIterator<string>,
-  req: DecoratedRequest,
+  req: Request,
   res: ServerResponse,
   next: () => void
 ) => void;

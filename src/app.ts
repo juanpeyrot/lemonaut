@@ -1,7 +1,7 @@
 import { createServer } from "http";
 import { Handler, Middleware } from "./types";
-import RequestDecorator, { DecoratedRequest } from "./middlewares/request";
-import ResponseDecorator, { DecoratedResponse } from "./middlewares/response";
+import RequestDecorator, { Request } from "./middlewares/request";
+import ResponseDecorator, { Response } from "./middlewares/response";
 import Router, { RouterInstance } from "./router";
 import { dispatchChain, matchUrl } from "./utils";
 import { readdir } from "fs/promises";
@@ -48,8 +48,8 @@ const App = (): AppInstance => {
   };
 
   const serverHandler = async (
-    request: DecoratedRequest,
-    response: DecoratedResponse
+    request: Request,
+    response: Response
   ) => {
     const sanitizedUrl = parseURLToRouteMap(
       request.url || "",
@@ -105,7 +105,7 @@ const App = (): AppInstance => {
 
       internalRouter.get(
         routePath,
-        async (req: DecoratedRequest, res: DecoratedResponse) => {
+        async (req: Request, res: Response) => {
           try {
             let stats;
             try {
@@ -142,7 +142,7 @@ const App = (): AppInstance => {
 
   const run = (port: number) => {
     const server = createServer((req, res) =>
-      serverHandler(req as DecoratedRequest, res as DecoratedResponse)
+      serverHandler(req as Request, res as Response)
     );
     server.listen(port, () => {
       console.log(`🚀 Server running on PORT: ${port}`);

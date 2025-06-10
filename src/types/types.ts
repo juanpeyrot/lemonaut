@@ -1,14 +1,14 @@
-import { DecoratedRequest } from "../middlewares/request";
-import { DecoratedResponse } from "../middlewares/response";
+import { Request } from "../middlewares/request";
+import { Response } from "../middlewares/response";
 
 export type Handler = (
-  req: DecoratedRequest,
-  res: DecoratedResponse
+  req: Request,
+  res: Response
 ) => unknown;
 
 export type Middleware = (
-  req: DecoratedRequest,
-  res: DecoratedResponse,
+  req: Request,
+  res: Response,
   next: () => Promise<void> | void
 ) => Promise<void> | void;
 
