@@ -1,70 +1,52 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { match, MatchFunction } from "path-to-regexp";
+import { parse } from "url";
 
 type Params = Record<string, string>;
-type Query = Record<string, string>;
+type Query = Record<string, string | string[]>;
 
 export interface DecoratedRequest extends IncomingMessage {
   params?: Params;
   query?: Query;
-	body?: string | Record<string, any>;
+  body?: string | Record<string, any>;
 }
 
 type MiddlewareWithRoutes = (
-	routes: IterableIterator<string>,
+  routes: IterableIterator<string>,
   req: DecoratedRequest,
   res: ServerResponse,
   next: () => void
 ) => void;
 
 const RequestDecorator: MiddlewareWithRoutes = (
-  routes: IterableIterator<string>,
-  request: DecoratedRequest,
-  response: ServerResponse,
-  next: () => void
+  routes,
+  request,
+  response,
+  next
 ) => {
-  const getParams = () => {
-    const urlParams = request.url?.split("/").slice(1) || [];
+  const pathname = request.url?.split("?")[0] || "/";
 
-    const [lastParam = ""] = urlParams[urlParams.length - 1]?.split("?") || [];
-    urlParams.splice(urlParams.length - 1, 1);
+  for (const route of routes) {
+    const parts = route.split("/");
+    const method = parts.pop();
+    const path = parts.join("/");
 
-    const allParams = [...urlParams, lastParam].join("/");
-    const method = request.method?.toUpperCase();
+    if (request.method?.toUpperCase() !== method) continue;
 
-    for (const path of routes) {
-      const urlMatch: MatchFunction<Record<string, string>> = match(path, {
-        decode: decodeURIComponent,
-      });
-      const url = `/${allParams}/${method}`;
-      const found = urlMatch(url);
+    const urlMatch: MatchFunction<Record<string, string>> = match(path, {
+      decode: decodeURIComponent,
+    });
 
-      if (found) {
-        request.params = {
-          ...request.params,
-          ...found.params,
-        };
-        break;
-      }
+    const found = urlMatch(pathname);
+    if (found) {
+      request.params = found.params;
+      break;
     }
-  };
+  }
 
-  const getQuery = () => {
-    const urlParams = request.url?.split("/").slice(1) || [];
-    const [lastParam, queryString = ""] =
-      urlParams[urlParams.length - 1]?.split("?") || [];
+  const parsed = parse(request.url || "", true);
+  request.query = parsed.query as Query;
 
-    const params = new URLSearchParams(queryString);
-    const entries = params.entries();
-
-    request.query = {
-      ...request.query,
-      ...Object.fromEntries(entries),
-    };
-  };
-
-  getParams();
-  getQuery();
   next();
 };
 

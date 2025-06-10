@@ -17,7 +17,7 @@ export interface AppInstance {
   patch: (path: string, ...handlers: Handler[]) => void;
   delete: (path: string, ...handlers: Handler[]) => void;
   use: (...args: [Middleware] | [string, ...Middleware[]]) => void;
-  useAll: (...handlers: Middleware[]) => void;
+  useMany: (...handlers: Middleware[]) => void;
   useRouter: (path: string, router: RouterInstance) => void;
   serveStatic: (folderPath: string) => Promise<void>;
   run: (port: number) => void;
@@ -94,7 +94,7 @@ const App = (): AppInstance => {
     }
   }
 
-  const serveStatic = async function (this: any, folderPath: string) {
+  const serveStatic = async function (folderPath: string) {
     const absoluteBasePath = path.resolve(folderPath);
 
     for await (const file of getAllStaticFiles(absoluteBasePath)) {
@@ -156,7 +156,7 @@ const App = (): AppInstance => {
     patch: internalRouter.patch,
     delete: internalRouter.delete,
     use: internalRouter.use,
-    useAll: internalRouter.useAll,
+    useMany: internalRouter.useMany,
     useRouter,
     serveStatic: serveStatic,
     run,

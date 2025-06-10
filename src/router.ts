@@ -11,7 +11,7 @@ export interface RouterInstance {
   patch: (path: string, ...handlers: Handler[]) => void;
   delete: (path: string, ...handlers: Handler[]) => void;
   use: (...args: [Middleware] | [string, ...Middleware[]]) => void;
-  useAll: (...handlers: Middleware[]) => void;
+  useMany: (...handlers: Middleware[]) => void;
   getRoutes: () => RouteMap;
   getMiddlewaresForAll: () => Middleware[];
 }
@@ -23,7 +23,7 @@ const Router = (): RouterInstance => {
   const getRoutes = () => routes;
   const getMiddlewaresForAll = () => middlewaresForAll;
 
-  const useAll = (...middlewares: Middleware[]) => {
+  const useMany = (...middlewares: Middleware[]) => {
     middlewaresForAll.push(...middlewares);
   };
 
@@ -86,7 +86,7 @@ const Router = (): RouterInstance => {
     patch,
     delete: del,
     use,
-    useAll,
+    useMany,
     getRoutes,
     getMiddlewaresForAll,
   };

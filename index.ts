@@ -19,6 +19,18 @@ app.use(BodyParserMiddleware);
 
 app.useRouter("/admin", adminRouter);
 
+app.get("/users/:id", (req, res) => {
+	console.log(req.params);
+  console.log(req.query);
+
+  console.log(req.params?.id);
+
+	console.log(req.body);
+
+	res.json({message: 'Done'});
+});
+
+
 app.post("/", (req, res) => {
   console.log(req.body, req.params, req.query);
   res.json({ message: req.body });
