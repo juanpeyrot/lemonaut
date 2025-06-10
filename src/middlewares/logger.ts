@@ -7,8 +7,10 @@ export const Logger: Middleware = (
   _res: Response,
   next: NextFunction
 ) => {
-  const { method, url } = req;
-  const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] ${method} ${url}`);
+  const now = new Date().toLocaleString(undefined, {
+    hour12: false,
+  });
+
+  console.log(`[${now}] ${req.method} ${req.url}`);
   next();
 };
