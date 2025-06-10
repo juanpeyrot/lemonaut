@@ -2,7 +2,7 @@ import { ServerResponse } from "http";
 import { IncomingMessage } from "http";
 import ejs from "ejs";
 import path from "path";
-import { NextFunction } from "../types";
+import { Middleware, NextFunction } from "../types";
 
 export interface Response extends ServerResponse {
   status: (code: number) => Response;
@@ -11,7 +11,7 @@ export interface Response extends ServerResponse {
   render: (templatePath: string, data: any) => Promise<void>;
 }
 
-const ResponseDecorator = (
+const ResponseDecorator: Middleware = (
   req: IncomingMessage,
   res: ServerResponse,
   next: NextFunction

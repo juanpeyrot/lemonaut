@@ -1,8 +1,8 @@
 import { Request } from "./request";
 import { Response } from "./response";
-import { NextFunction } from "../types";
+import { Middleware, NextFunction } from "../types";
 
-export const LoggerMiddleware = (
+export const LoggerMiddleware: Middleware = (
   req: Request,
   _res: Response,
   next: NextFunction

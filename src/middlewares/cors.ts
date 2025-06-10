@@ -1,6 +1,6 @@
 import { Request } from "./request";
 import { Response } from "./response";
-import { NextFunction } from "../types";
+import { Middleware, NextFunction } from "../types";
 
 interface CORSOptions {
   origin?: string | string[];
@@ -9,7 +9,7 @@ interface CORSOptions {
   credentials?: boolean;
 }
 
-export const CORS = (options: CORSOptions = {}) => {
+export const CORS = (options: CORSOptions = {}): Middleware => {
   const {
     origin = "*",
     methods = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
