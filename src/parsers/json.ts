@@ -1,5 +1,5 @@
 import { Request, Response } from "../middlewares";
-import { NextFunction } from "../router";
+import { NextFunction } from "../types";
 import { Parser } from "../types";
 import { registerParser } from "./registry";
 

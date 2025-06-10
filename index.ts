@@ -1,39 +1,43 @@
 import App from "./src/app";
-import { JSONParser, URLEncodedParser } from "./src/parsers";
-import { BodyParserMiddleware } from "./src/middlewares";
-import Router from "./src/router";
+import {
+  NotFoundError,
+  UnauthorizedError,
+  DuplicatedDataError,
+  InternalServerError,
+} from "./src/errors";
+import { ErrorHandlerMiddleware } from "./src/middlewares/error-handler";
 
 const app = App();
 
-app.serveStatic("./public");
-
-const adminRouter = Router();
-adminRouter.get("/tuco", (req, res) => {
-	res.json({ message: "Hello Tuco!" });
-}
-);
-
-app.use(JSONParser());
-app.use(URLEncodedParser());
-app.use(BodyParserMiddleware);
-
-app.useRouter("/admin", adminRouter);
-
-app.get("/users/:id", (req, res) => {
-	console.log(req.params);
-  console.log(req.query);
-
-  console.log(req.params?.id);
-
-	console.log(req.body);
-
-	res.json({message: 'Done'});
+app.use(async (req, res, next) => {
+  console.log("General middleware before routes");
+  next();
 });
 
-
-app.post("/", (req, res) => {
-  console.log(req.body, req.params, req.query);
-  res.json({ message: req.body });
+app.get("/notfound", (req, res) => {
+  throw new NotFoundError("Resource not found");
 });
+
+app.get("/unauthorized", (req, res) => {
+  throw new UnauthorizedError("You must be logged in");
+});
+
+app.get("/duplicate", (req, res) => {
+  throw new DuplicatedDataError("The name is already taken");
+});
+
+app.get("/generic-error", (req, res) => {
+  throw new Error("Generic error");
+});
+
+app.get("/internal-error", (req, res) => {
+	throw new InternalServerError("Internal server error");
+});
+
+app.get("/", (req, res) => {
+  res.json({ message: "Hello, world!" });
+});
+
+app.use(ErrorHandlerMiddleware);
 
 app.run(3000);

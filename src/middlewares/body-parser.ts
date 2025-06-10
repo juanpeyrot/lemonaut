@@ -1,9 +1,9 @@
 import { getRegisteredParsers } from "../parsers/registry";
-import { NextFunction } from "../router";
+import { Middleware, NextFunction } from "../types";
 import { Request } from "./request";
 import { Response } from "./response";
 
-export const BodyParserMiddleware = async (
+export const BodyParserMiddleware: Middleware = async (
   req: Request,
   res: Response,
   next: NextFunction

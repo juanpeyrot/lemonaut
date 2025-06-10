@@ -13,3 +13,4 @@ export type Middleware = (
 ) => Promise<void> | void;
 
 export type RouteHandler = Handler | Middleware;
+export type NextFunction = () => Promise<void> | void;

@@ -2,8 +2,7 @@ import { ServerResponse } from "http";
 import { IncomingMessage } from "http";
 import ejs from "ejs";
 import path from "path";
-
-type NextFunction = () => void;
+import { NextFunction } from "../types";
 
 export interface Response extends ServerResponse {
   status: (code: number) => Response;

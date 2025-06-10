@@ -1,7 +1,5 @@
 import { Handler, Middleware, RouteHandler } from "./types";
 
-export type NextFunction = () => void | Promise<void>;
-
 type RouteMap = Map<string, RouteHandler[]>;
 
 export interface RouterInstance {
