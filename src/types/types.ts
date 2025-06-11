@@ -14,7 +14,7 @@ interface BaseHttpMethods {
 export interface AppInstance extends BaseHttpMethods {
   useRouter: (path: string, router: RouterInstance) => void;
   serveStatic: (folderPath: string) => Promise<void>;
-  run: (port: number) => void;
+  startMission: (port: number) => void;
 }
 
 export interface RouterInstance extends BaseHttpMethods {

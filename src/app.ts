@@ -9,7 +9,7 @@ import { pipeline } from "stream/promises";
 import path from "path";
 import mime from "mime-types";
 
-const App = (): AppInstance => {
+export const lemonaut = (): AppInstance => {
   const internalRouter = Router();
 
   const normalizePath = (
@@ -124,7 +124,7 @@ const App = (): AppInstance => {
     }
   };
 
-  const run = (port: number) => {
+  const startMission = (port: number) => {
     const server = createServer((req, res) =>
       serverHandler(req as IRequest, res as IResponse)
     );
@@ -143,8 +143,6 @@ const App = (): AppInstance => {
     useMany: internalRouter.useMany,
     useRouter,
     serveStatic: serveStatic,
-    run,
+    startMission,
   };
 };
-
-export default App;
