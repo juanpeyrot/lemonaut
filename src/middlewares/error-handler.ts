@@ -1,12 +1,11 @@
 import { HttpStatus } from "../constants";
 import { HttpError } from "../errors";
 import { Middleware, NextFunction } from "../types";
-import { Request } from "./request";
-import { Response } from "./response";
+import { IRequest, IResponse } from "./";
 
 export const ErrorHandler: Middleware = async (
-  req: Request,
-  res: Response,
+  req: IRequest,
+  res: IResponse,
   next: NextFunction
 ) => {
   try {

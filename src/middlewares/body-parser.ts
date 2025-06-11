@@ -1,11 +1,10 @@
 import { getRegisteredParsers } from "../parsers/registry";
 import { Middleware, NextFunction } from "../types";
-import { Request } from "./request";
-import { Response } from "./response";
+import { IRequest, IResponse } from "./";
 
 export const BodyParser: Middleware = async (
-  req: Request,
-  res: Response,
+  req: IRequest,
+  res: IResponse,
   next: NextFunction
 ) => {
   const chunks: Buffer[] = [];

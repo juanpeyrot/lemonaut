@@ -1,5 +1,4 @@
-import { Request } from "./request";
-import { Response } from "./response";
+import { IRequest, IResponse } from "./";
 import { Middleware, NextFunction } from "../types";
 
 interface CORSOptions {
@@ -17,7 +16,7 @@ export const CORS = (options: CORSOptions = {}): Middleware => {
     credentials = false,
   } = options;
 
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: IRequest, res: IResponse, next: NextFunction) => {
     const requestOrigin = req.headers.origin;
 
     let allowedOrigin = "*";

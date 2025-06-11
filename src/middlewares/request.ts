@@ -2,24 +2,24 @@ import { IncomingMessage, ServerResponse } from "http";
 import { match, MatchFunction } from "path-to-regexp";
 import { parse } from "url";
 
-type Params = Record<string, string>;
-type Query = Record<string, string | string[]>;
+export type Params = Record<string, string>;
+export type Query = Record<string, string | string[]>;
 
-export interface Request extends IncomingMessage {
+export interface IRequest extends IncomingMessage {
   params?: Params;
   query?: Query;
   body?: string | Record<string, any>;
-	cookies?: Record<string, string>;
+  cookies?: Record<string, string>;
 }
 
 type MiddlewareWithRoutes = (
   routes: IterableIterator<string>,
-  req: Request,
+  req: IRequest,
   res: ServerResponse,
   next: () => void
 ) => void;
 
-const RequestDecorator: MiddlewareWithRoutes = (
+export const Request: MiddlewareWithRoutes = (
   routes,
   request,
   response,
@@ -50,5 +50,3 @@ const RequestDecorator: MiddlewareWithRoutes = (
 
   next();
 };
-
-export default RequestDecorator;

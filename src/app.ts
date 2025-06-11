@@ -1,13 +1,12 @@
 import { createServer } from "http";
 import { AppInstance, RouterInstance } from "./types";
-import RequestDecorator, { Request } from "./middlewares/request";
-import ResponseDecorator, { Response } from "./middlewares/response";
-import Router from "./router";
+import { Request, IRequest, Response, IResponse } from "./middlewares";
 import { dispatchChain, matchUrl } from "./utils";
+import Router from "./router";
 import { readdir } from "fs/promises";
 import fs, { createReadStream } from "fs";
-import path from "path";
 import { pipeline } from "stream/promises";
+import path from "path";
 import mime from "mime-types";
 
 const App = (): AppInstance => {
@@ -38,7 +37,7 @@ const App = (): AppInstance => {
     });
   };
 
-  const serverHandler = async (request: Request, response: Response) => {
+  const serverHandler = async (request: IRequest, response: IResponse) => {
     const sanitizedUrl = normalizePath(
       request.url || "",
       request.method || "GET"
@@ -47,8 +46,8 @@ const App = (): AppInstance => {
     let globalMiddlewares = internalRouter.getMiddlewaresForAll();
 
     const commonHandlers = [
-      RequestDecorator.bind(null, internalRouter.getRoutes().keys()),
-      ResponseDecorator,
+      Request.bind(null, internalRouter.getRoutes().keys()),
+      Response,
       ...globalMiddlewares,
     ];
 
@@ -91,7 +90,7 @@ const App = (): AppInstance => {
         .replace(/\\/g, "/");
       const routePath = "/" + relativePath;
 
-      internalRouter.get(routePath, async (req: Request, res: Response) => {
+      internalRouter.get(routePath, async (req: IRequest, res: IResponse) => {
         try {
           let stats;
           try {
@@ -127,7 +126,7 @@ const App = (): AppInstance => {
 
   const run = (port: number) => {
     const server = createServer((req, res) =>
-      serverHandler(req as Request, res as Response)
+      serverHandler(req as IRequest, res as IResponse)
     );
     server.listen(port, () => {
       console.log(`🚀 Server running on PORT: ${port}`);

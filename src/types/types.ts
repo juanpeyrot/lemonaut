@@ -1,5 +1,5 @@
-import { Request } from "../middlewares/request";
-import { Response } from "../middlewares/response";
+import { IRequest } from "../middlewares/request";
+import { IResponse } from "../middlewares/response";
 
 interface BaseHttpMethods {
   get: (path: string, ...handlers: Handler[]) => void;
@@ -25,13 +25,13 @@ export interface RouterInstance extends BaseHttpMethods {
 export type RouteMap = Map<string, RouteHandler[]>;
 
 export type Handler = (
-  req: Request,
-  res: Response
+  req: IRequest,
+  res: IResponse
 ) => unknown;
 
 export type Middleware = (
-  req: Request,
-  res: Response,
+  req: IRequest,
+  res: IResponse,
   next: () => Promise<void> | void
 ) => Promise<void> | void;
 

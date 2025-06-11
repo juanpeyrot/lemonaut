@@ -1,38 +1,40 @@
-import { ServerResponse } from "http";
-import { IncomingMessage } from "http";
+import { ServerResponse, IncomingMessage } from "http";
+import { Middleware, NextFunction } from "../types";
 import ejs from "ejs";
 import path from "path";
-import { Middleware, NextFunction } from "../types";
 
-export interface Response extends ServerResponse {
-  status: (code: number) => Response;
+export interface IResponse extends ServerResponse<IncomingMessage> {
+  status: (code: number) => IResponse;
   json: (data: any) => void;
   send: (data: any) => Promise<void>;
   render: (templatePath: string, data: any) => Promise<void>;
 }
 
-const ResponseDecorator: Middleware = (
+export const Response: Middleware = (
   req: IncomingMessage,
   res: ServerResponse,
   next: NextFunction
 ): void => {
-  const customRes: Response = res as Response;
+  const customRes = res as IResponse;
 
-  customRes.status = (status: number): Response => {
-    customRes.statusCode = status;
+  customRes.status = (code: number): IResponse => {
+    customRes.statusCode = code;
     return customRes;
   };
 
   customRes.json = (data: any): void => {
+		if (customRes.writableEnded) return;
     customRes.setHeader("Content-Type", "application/json");
     customRes.end(JSON.stringify(data));
   };
 
   customRes.send = async (data: any): Promise<void> => {
+		if (customRes.writableEnded) return;
     customRes.end(data);
   };
 
   customRes.render = async (templatePath: string, data: any): Promise<void> => {
+		if (customRes.writableEnded) return;
     try {
       const fullPath = path.join(process.cwd(), "views", templatePath);
       const html = await ejs.renderFile(fullPath, data, { async: true });
@@ -46,5 +48,3 @@ const ResponseDecorator: Middleware = (
 
   next();
 };
-
-export default ResponseDecorator;

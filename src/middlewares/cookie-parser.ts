@@ -1,9 +1,8 @@
-import { Request } from "./request";
-import { Response } from "./response";
+import { IRequest, IResponse } from "./";
 import { Middleware, NextFunction } from "../types";
 
 export const CookieParser = (): Middleware => {
-  return (req: Request, _res: Response, next: NextFunction) => {
+  return (req: IRequest, _res: IResponse, next: NextFunction) => {
     const cookieHeader = req.headers.cookie;
     if (!cookieHeader) {
       req.cookies = {};

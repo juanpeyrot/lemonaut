@@ -5,11 +5,18 @@ import Router from "./src/router";
 const app = App();
 
 const authRouter = Router();
-authRouter.post("/login", (req, res) => res.json({ message: "Login successful" }));
+authRouter.post("/login", (req, res) => res.json({ message: req }));
 authRouter.post("/register", (req, res) => res.json({ message: "Registration successful" }));
 
 const uRouter2 = Router();
-uRouter2.get("/test", (req, res) => res.json({ message: "Test route" }));
+uRouter2.get("/test", (req, res) => res.json({ message: res.json({
+    message: "ok",
+    method: req.method,
+    url: req.url,
+    headers: req.headers,
+    params: req.params,
+    query: req.query,
+  }) }));
 
 const usersRouter = Router();
 usersRouter.get("/", (req, res) => res.json({ message: "List of users" }));

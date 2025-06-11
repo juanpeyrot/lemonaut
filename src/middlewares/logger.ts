@@ -1,8 +1,7 @@
-import { Request } from "./request";
-import { Response } from "./response";
+import { IRequest, IResponse } from "./";
 import { Middleware, NextFunction } from "../types";
 
-const getIP = (req: Request): string => {
+const getIP = (req: IRequest): string => {
   const getHeaderAsString = (header: string | string[] | undefined): string => {
     if (!header) return '';
     return Array.isArray(header) ? header[0] : header;
@@ -34,8 +33,8 @@ const getIP = (req: Request): string => {
 };
 
 export const Logger: Middleware = (
-  req: Request,
-  res: Response,
+  req: IRequest,
+  res: IResponse,
   next: NextFunction
 ) => {
   const start = Date.now();
