@@ -1,27 +1,14 @@
 import { createServer } from "http";
-import { Handler, Middleware } from "./types";
+import { AppInstance, RouterInstance } from "./types";
 import RequestDecorator, { Request } from "./middlewares/request";
 import ResponseDecorator, { Response } from "./middlewares/response";
-import Router, { RouterInstance } from "./router";
+import Router from "./router";
 import { dispatchChain, matchUrl } from "./utils";
 import { readdir } from "fs/promises";
 import fs, { createReadStream } from "fs";
 import path from "path";
 import { pipeline } from "stream/promises";
 import mime from "mime-types";
-
-export interface AppInstance {
-  get: (path: string, ...handlers: Handler[]) => void;
-  post: (path: string, ...handlers: Handler[]) => void;
-  put: (path: string, ...handlers: Handler[]) => void;
-  patch: (path: string, ...handlers: Handler[]) => void;
-  delete: (path: string, ...handlers: Handler[]) => void;
-  use: (...args: [Middleware] | [string, ...Middleware[]]) => void;
-  useMany: (...handlers: Middleware[]) => void;
-  useRouter: (path: string, router: RouterInstance) => void;
-  serveStatic: (folderPath: string) => Promise<void>;
-  run: (port: number) => void;
-}
 
 const App = (): AppInstance => {
   const internalRouter = Router();

@@ -1,57 +1,21 @@
 import App from "./src/app";
-import {
-  NotFoundError,
-  UnauthorizedError,
-  DuplicatedDataError,
-  InternalServerError,
-} from "./src/errors";
-import { ErrorHandler, Logger, CORS, CookieParser } from "./src/middlewares";
-import { JSONParser } from "./src/parsers";
+import { Logger } from "./src/middlewares";
+import Router from "./src/router";
 
 const app = App();
 
-app.use(async (req, res, next) => {
-  console.log("General middleware before routes");
-  next();
-});
+const authRouter = Router();
+authRouter.post("/login", (req, res) => res.json({ message: "Login successful" }));
+authRouter.post("/register", (req, res) => res.json({ message: "Registration successful" }));
 
-app.useMany(
-  Logger,
-  CORS({
-    origin: ["http://localhost:3001", "http://127.0.0.1:5500"],
-    credentials: true,
-  }),
-  CookieParser(),
-  JSONParser(),
-	ErrorHandler
-);
+const usersRouter = Router();
+usersRouter.get("/", (req, res) => res.json({ message: "List of users" }));
+usersRouter.get("/:id", (req, res) => res.json({ message: `User ${req.params?.id}` }));
 
-app.get("/cookies", (req, res) => {
-  res.json({ cookies: req.cookies });
-});
+const apiRouter = Router();
+apiRouter.use("/auth", authRouter);
+apiRouter.use("/users", usersRouter);
 
-app.get("/notfound", (req, res) => {
-  throw new NotFoundError("Resource not found");
-});
-
-app.get("/unauthorized", (req, res) => {
-  throw new UnauthorizedError("You must be logged in");
-});
-
-app.get("/duplicate", (req, res) => {
-  throw new DuplicatedDataError("The name is already taken");
-});
-
-app.get("/generic-error", (req, res) => {
-  throw new Error("Generic error");
-});
-
-app.get("/internal-error", (req, res) => {
-	throw new InternalServerError("Internal server error");
-});
-
-app.get("/", (req, res) => {
-  res.json({ message: "Hello, world!" });
-});
+app.use("/api", Logger, apiRouter);
 
 app.run(3000);
