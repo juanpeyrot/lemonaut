@@ -1,4 +1,10 @@
-import { Handler, Middleware, MiddlewareOrRouter, RouteMap, RouterInstance } from "./types";
+import {
+  Handler,
+  Middleware,
+  MiddlewareOrRouter,
+  RouteMap,
+  RouterInstance,
+} from "./types";
 
 const Router = (): RouterInstance => {
   const routes: RouteMap = new Map();
@@ -6,6 +12,16 @@ const Router = (): RouterInstance => {
 
   const getRoutes = () => routes;
   const getMiddlewaresForAll = () => middlewaresForAll;
+
+  function joinPaths(...segments: string[]): string {
+    return (
+      "/" +
+      segments
+        .map((s) => s.replace(/^\/+|\/+$/g, ""))
+        .filter(Boolean)
+        .join("/")
+    );
+  }
 
   const useMany = (...middlewares: Middleware[]) => {
     middlewaresForAll.push(...middlewares);
@@ -22,8 +38,8 @@ const Router = (): RouterInstance => {
         if (typeof item === "function") {
           middlewares.push(item);
         } else if (
-          "getRoutes" in (item as RouterInstance) &&
-          typeof (item as RouterInstance).getRoutes === "function"
+          typeof item === "object" &&
+          typeof item.getRoutes === "function"
         ) {
           const childRouter = item as RouterInstance;
           const childRoutes = childRouter.getRoutes();
@@ -31,9 +47,9 @@ const Router = (): RouterInstance => {
           childRoutes.forEach((handlers, key) => {
             const match = key.match(/(.*)\/(GET|POST|PUT|PATCH|DELETE)$/);
             if (!match) return;
-            const [, routePath, method] = match;
 
-            const newPath = `${pathPrefix}${routePath}`;
+            const [, routePath, method] = match;
+            const newPath = joinPaths(pathPrefix, routePath);
             const newKey = `${newPath}/${method}`;
 
             const existing = routes.get(newKey) || [];
@@ -43,17 +59,11 @@ const Router = (): RouterInstance => {
       }
 
       if (middlewares.length > 0) {
-        const possiblePaths = [
-          `${pathPrefix}/GET`,
-          `${pathPrefix}/POST`,
-          `${pathPrefix}/PUT`,
-          `${pathPrefix}/PATCH`,
-          `${pathPrefix}/DELETE`,
-        ];
-
-        possiblePaths.forEach((route) => {
-          const existingHandlers = routes.get(route) || [];
-          routes.set(route, [...middlewares, ...existingHandlers]);
+        const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
+        methods.forEach((method) => {
+          const key = `${joinPaths(pathPrefix)}/${method}`;
+          const existingHandlers = routes.get(key) || [];
+          routes.set(key, [...middlewares, ...existingHandlers]);
         });
       }
     } else {

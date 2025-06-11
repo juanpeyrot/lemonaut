@@ -13,16 +13,20 @@ import mime from "mime-types";
 const App = (): AppInstance => {
   const internalRouter = Router();
 
-  const parseURLToRouteMap = (
+  const normalizePath = (
     url: string | undefined,
     method: string | undefined
   ) => {
     if (!url || !method) return "";
-    const urlParams = url.split("/").slice(1);
-    const [lastParam] = urlParams[urlParams.length - 1].split("?");
-    urlParams.splice(urlParams.length - 1, 1);
-    const allParams = [...urlParams, lastParam].join("/");
-    return `/${allParams}/${method.toUpperCase()}`;
+
+    const cleanUrl = url.split("?")[0].split("#")[0];
+
+    let normalized = cleanUrl.replace(/\/{2,}/g, "/");
+    if (normalized.length > 1 && normalized.endsWith("/")) {
+      normalized = normalized.slice(0, -1);
+    }
+
+    return `${normalized}/${method.toUpperCase()}`;
   };
 
   const useRouter = (base: string, router: RouterInstance) => {
@@ -34,11 +38,8 @@ const App = (): AppInstance => {
     });
   };
 
-  const serverHandler = async (
-    request: Request,
-    response: Response
-  ) => {
-    const sanitizedUrl = parseURLToRouteMap(
+  const serverHandler = async (request: Request, response: Response) => {
+    const sanitizedUrl = normalizePath(
       request.url || "",
       request.method || "GET"
     );
@@ -90,40 +91,37 @@ const App = (): AppInstance => {
         .replace(/\\/g, "/");
       const routePath = "/" + relativePath;
 
-      internalRouter.get(
-        routePath,
-        async (req: Request, res: Response) => {
+      internalRouter.get(routePath, async (req: Request, res: Response) => {
+        try {
+          let stats;
           try {
-            let stats;
-            try {
-              stats = fs.statSync(file);
-            } catch {
-              res.statusCode = 404;
-              res.end("Not Found");
-              return;
-            }
-
-            const mimeType = mime.lookup(file) || "application/octet-stream";
-
-            const etag = `${stats.size}-${stats.mtimeMs}`;
-
-            res.setHeader("Content-Type", mimeType);
-            res.setHeader("ETag", etag);
-
-            if (req.headers["if-none-match"] === etag) {
-              res.statusCode = 304;
-              res.end();
-              return;
-            }
-
-            const fileStream = createReadStream(file);
-            await pipeline(fileStream, res);
-          } catch (error) {
-            res.statusCode = 500;
-            res.end("Internal Server Error");
+            stats = fs.statSync(file);
+          } catch {
+            res.statusCode = 404;
+            res.end("Not Found");
+            return;
           }
+
+          const mimeType = mime.lookup(file) || "application/octet-stream";
+
+          const etag = `${stats.size}-${stats.mtimeMs}`;
+
+          res.setHeader("Content-Type", mimeType);
+          res.setHeader("ETag", etag);
+
+          if (req.headers["if-none-match"] === etag) {
+            res.statusCode = 304;
+            res.end();
+            return;
+          }
+
+          const fileStream = createReadStream(file);
+          await pipeline(fileStream, res);
+        } catch (error) {
+          res.statusCode = 500;
+          res.end("Internal Server Error");
         }
-      );
+      });
     }
   };
 
