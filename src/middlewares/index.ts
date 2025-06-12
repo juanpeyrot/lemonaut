@@ -5,3 +5,4 @@ export * from './error-handler';
 export * from './logger';
 export * from './request';
 export * from './response';
+export * from './security';

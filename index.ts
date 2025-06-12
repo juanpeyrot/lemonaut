@@ -1,8 +1,10 @@
 import { lemonaut } from "./src/app";
-import { Logger } from "./src/middlewares";
+import { Logger, security } from "./src/middlewares";
 import Router from "./src/router";
 
 const app = lemonaut();
+
+app.use(security);
 
 const authRouter = Router();
 authRouter.post("/login", (req, res) => res.json({ message: req }));
