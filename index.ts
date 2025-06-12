@@ -1,23 +1,13 @@
 import { lemonaut } from "./src/app";
-import { Logger, security } from "./src/middlewares";
-import Router from "./src/router";
+import { maxRequestTimeout } from "./src/middlewares/max-request-timeout";
 
 const app = lemonaut();
 
-app.use(security);
+app.use(maxRequestTimeout(3000));
 
-const authRouter = Router();
-authRouter.post("/login", (req, res) => res.json({ message: req }));
-authRouter.post("/register", (req, res) => res.json({ message: "Registration successful" }));
-
-const usersRouter = Router();
-usersRouter.get("/", (req, res) => res.json({ message: "List of users" }));
-usersRouter.get("/:id", (req, res) => res.json({ message: `User ${req.params?.id}` }));
-
-const apiRouter = Router();
-apiRouter.use("/auth", authRouter);
-apiRouter.use("/users", usersRouter);
-
-app.use("/api", Logger, apiRouter);
+app.get("/slow", async (req, res) => {
+  await new Promise(resolve => setTimeout(resolve,5000));
+  res.json({ message: "This was slow" });
+});
 
 app.startMission(3000);
