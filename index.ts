@@ -3,11 +3,10 @@ import { rateLimit } from "./src/middlewares";
 
 const app = lemonaut();
 
-app.use(rateLimit(3000));
+app.use(rateLimit({ windowMs: 60_000, max: 10 }));
 
-app.get("/slow", async (req, res) => {
-  await new Promise(resolve => setTimeout(resolve,5000));
-  res.json({ message: "This was slow" });
+app.get("/ping", (req, res) => {
+  res.json({ message: "pong" });
 });
 
 app.startMission(3000);
