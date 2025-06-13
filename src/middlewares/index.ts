@@ -3,6 +3,7 @@ export * from './cookie-parser';
 export * from './cors';
 export * from './error-handler';
 export * from './logger';
+export * from './multipart-parser';
 export * from './rate-limit';
 export * from './request';
 export * from './response';

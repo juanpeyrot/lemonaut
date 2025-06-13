@@ -1,12 +1,15 @@
 import { lemonaut } from "./src/app";
-import { rateLimit } from "./src/middlewares";
+import { multipart } from "./src/middlewares";
 
 const app = lemonaut();
 
-app.use(rateLimit({ windowMs: 60_000, max: 10 }));
+app.use(multipart);
 
-app.get("/ping", (req, res) => {
-  res.json({ message: "pong" });
+app.post("/upload", (req, res) => {
+  console.log("Fields:", req.body);
+  console.log("Files:", req.files);
+
+  res.json({ success: true });
 });
 
 app.startMission(3000);

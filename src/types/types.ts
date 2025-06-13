@@ -39,3 +39,10 @@ export type MiddlewareOrRouter = Middleware | RouterInstance;
 
 export type RouteHandler = Handler | Middleware;
 export type NextFunction = () => Promise<void> | void;
+
+export interface UploadedFile {
+  fieldname: string;
+  filename: string;
+  mime: string;
+  buffer: Buffer;
+}
