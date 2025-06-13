@@ -6,3 +6,4 @@ export * from './logger';
 export * from './request';
 export * from './response';
 export * from './security';
+export * from './rate-limit';

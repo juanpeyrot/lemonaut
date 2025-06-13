@@ -1,9 +1,9 @@
 import { lemonaut } from "./src/app";
-import { maxRequestTimeout } from "./src/middlewares/max-request-timeout";
+import { rateLimit } from "./src/middlewares";
 
 const app = lemonaut();
 
-app.use(maxRequestTimeout(3000));
+app.use(rateLimit(3000));
 
 app.get("/slow", async (req, res) => {
   await new Promise(resolve => setTimeout(resolve,5000));

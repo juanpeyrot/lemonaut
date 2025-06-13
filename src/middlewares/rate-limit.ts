@@ -1,6 +1,6 @@
 import { Middleware } from "../types";
 
-export const maxRequestTimeout = (limitMs = 10000): Middleware => {
+export const rateLimit = (limitMs = 10000): Middleware => {
   return (req, res, next) => {
     const timer = setTimeout(() => {
       if (!res.writableEnded) {
