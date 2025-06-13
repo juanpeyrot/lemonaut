@@ -32,7 +32,7 @@ export type Handler = (
 export type Middleware = (
   req: IRequest,
   res: IResponse,
-  next: () => Promise<void> | void
+  next: NextFunction
 ) => Promise<void> | void;
 
 export type MiddlewareOrRouter = Middleware | RouterInstance;
