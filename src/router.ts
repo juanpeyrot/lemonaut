@@ -6,7 +6,7 @@ import {
   RouterInstance,
 } from "./types";
 
-const Router = (): RouterInstance => {
+export const Router = (): RouterInstance => {
   const routes: RouteMap = new Map();
   const middlewaresForAll: Middleware[] = [];
 
@@ -114,5 +114,3 @@ const Router = (): RouterInstance => {
     getMiddlewaresForAll,
   };
 };
-
-export default Router;

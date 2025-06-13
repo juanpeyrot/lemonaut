@@ -1,3 +1,4 @@
+import { IncomingMessage, Server, ServerResponse } from "http";
 import { IRequest } from "../middlewares/request";
 import { IResponse } from "../middlewares/response";
 
@@ -14,7 +15,7 @@ interface BaseHttpMethods {
 export interface AppInstance extends BaseHttpMethods {
   useRouter: (path: string, router: RouterInstance) => void;
   serveStatic: (folderPath: string) => Promise<void>;
-  startMission: (port: number) => void;
+  startMission: (port: number) => Server<typeof IncomingMessage, typeof ServerResponse>;
 }
 
 export interface RouterInstance extends BaseHttpMethods {

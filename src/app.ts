@@ -2,7 +2,7 @@ import { createServer } from "http";
 import { AppInstance, RouterInstance } from "./types";
 import { Request, IRequest, Response, IResponse } from "./middlewares";
 import { dispatchChain, matchUrl } from "./utils";
-import Router from "./router";
+import { Router } from "./router";
 import { readdir } from "fs/promises";
 import fs, { createReadStream } from "fs";
 import { pipeline } from "stream/promises";
@@ -131,6 +131,8 @@ export const lemonaut = (): AppInstance => {
     server.listen(port, () => {
       console.log(`🚀 Server running on PORT: ${port}`);
     });
+
+		return server;
   };
 
   return {
