@@ -4,7 +4,6 @@ import { makeFetch } from "supertest-fetch";
 import fs from "fs";
 import path from "path";
 import { Router } from "../src/router";
-import { Readable } from "stream";
 
 describe("Lemonaut App", () => {
   let app: ReturnType<typeof lemonaut>;
