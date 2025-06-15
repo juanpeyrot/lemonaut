@@ -41,4 +41,43 @@ describe("Request middleware", () => {
     expect(req.query).toEqual({ active: "true" });
     expect(next).toHaveBeenCalledOnce();
   });
+
+  it("should parse pathname correctly from url with query", () => {
+    const req = {
+      url: "/foo/bar?x=1&y=2",
+      method: "GET",
+    } as any;
+    const res = {} as any;
+
+    const routes = ["/foo/bar/GET"];
+
+    let nextCalled = false;
+    Request(routes[Symbol.iterator](), req, res, () => {
+      nextCalled = true;
+    });
+
+    expect(req.params).toBeDefined();
+    expect(req.query).toEqual({ x: "1", y: "2" });
+    expect(nextCalled).toBe(true);
+  });
+
+  it("should use '/' as pathname if url is undefined", () => {
+    const req = {
+      method: "GET",
+      url: undefined,
+    } as IRequest;
+
+    const res = {} as any;
+
+    let nextCalled = false;
+
+    const routes = ["/GET"];
+
+    Request(routes[Symbol.iterator](), req, res, () => {
+      nextCalled = true;
+    });
+
+    expect(req.query).toEqual({});
+    expect(nextCalled).toBe(true);
+  });
 });
