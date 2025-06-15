@@ -15,4 +15,5 @@ export * from './concrete-errors/payload-too-large';
 export * from './concrete-errors/service-unavailable';
 export * from './concrete-errors/too-many-requests';
 export * from './concrete-errors/unauthorized';
+export * from './concrete-errors/unprocessable-entity';
 export * from './concrete-errors/unsupported-media-type';
