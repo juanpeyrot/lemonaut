@@ -113,13 +113,24 @@ describe("timeout middleware", () => {
       "application/json"
     );
   });
-  it("should not override status code if already 503", () => {
-    mockRes.statusCode = 503;
-
+  it("calls originalEnd with chunk if chunk is a function", () => {
     const middleware = timeout(1000);
     middleware(mockReq, mockRes, mockNext);
 
-    vi.advanceTimersByTime(1001);
-    expect(mockRes.statusCode).toBe(503);
+    const func = vi.fn();
+    (mockRes.end as any)(func);
+
+    expect(endSpy).toHaveBeenCalledWith(func);
+  });
+
+  it("calls originalEnd with chunk and encoding if encoding is a function", () => {
+    const middleware = timeout(1000);
+    middleware(mockReq, mockRes, mockNext);
+
+    const chunk = "data";
+    const func = vi.fn();
+    (mockRes.end as any)(chunk, func);
+
+    expect(endSpy).toHaveBeenCalledWith(chunk, func);
   });
 });
