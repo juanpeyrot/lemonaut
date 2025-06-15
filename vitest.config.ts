@@ -6,7 +6,7 @@ export default defineConfig({
     environment: "node",
     coverage: {
       reporter: ["text", "html"],
-      exclude: ["**/test/**", "**/types/**", "**/index.ts"],
+      exclude: ["**/test/**", "**/types/**", "**/index.ts", "vitest.config.ts"],
     },
   },
 });
