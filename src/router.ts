@@ -43,6 +43,7 @@ export const Router = (): RouterInstance => {
         ) {
           const childRouter = item as RouterInstance;
           const childRoutes = childRouter.getRoutes();
+          const childMiddlewares = childRouter.getMiddlewaresForAll?.() ?? [];
 
           childRoutes.forEach((handlers, key) => {
             const match = key.match(/(.*)\/(GET|POST|PUT|PATCH|DELETE)$/);
@@ -53,7 +54,12 @@ export const Router = (): RouterInstance => {
             const newKey = `${newPath}/${method}`;
 
             const existing = routes.get(newKey) || [];
-            routes.set(newKey, [...middlewares, ...existing, ...handlers]);
+            routes.set(newKey, [
+              ...middlewares,
+              ...childMiddlewares,
+              ...existing,
+              ...handlers,
+            ]);
           });
         }
       }
