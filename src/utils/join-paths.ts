@@ -1,6 +1,8 @@
-export const joinPaths = (...segments: string[]): string =>
-  "/" +
-  segments
-    .map((s) => s.replace(/^\/+|\/+$/g, ""))
+export const joinPaths = (...segments: string[]): string => {
+  const joined = segments
+    .map(s => s.replace(/^\/+|\/+$/g, ''))
     .filter(Boolean)
-    .join("/");
+    .join('/');
+  
+  return joined ? `/${joined}` : '/';
+};

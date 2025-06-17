@@ -1,9 +1,6 @@
-import {
-  Handler,
-  Middleware,
-  RouterInstance,
-} from "./types";
+import { Handler, Middleware, RouterInstance } from "./types";
 import { MiddlewareOrRouter, RouteMap } from "./types/types";
+import { joinPaths } from "./utils";
 
 export const Router = (): RouterInstance => {
   const routes: RouteMap = new Map();
@@ -11,16 +8,6 @@ export const Router = (): RouterInstance => {
 
   const getRoutes = () => routes;
   const getMiddlewaresForAll = () => middlewaresForAll;
-
-  function joinPaths(...segments: string[]): string {
-    return (
-      "/" +
-      segments
-        .map((s) => s.replace(/^\/+|\/+$/g, ""))
-        .filter(Boolean)
-        .join("/")
-    );
-  }
 
   const useMany = (...middlewares: Middleware[]) => {
     middlewaresForAll.push(...middlewares);
@@ -48,7 +35,8 @@ export const Router = (): RouterInstance => {
             const match = key.match(/(.*)\/(GET|POST|PUT|PATCH|DELETE)$/);
             if (!match) return;
 
-            const [, routePath, method] = match;
+            let [, routePath, method] = match;
+            routePath = routePath === "/" ? "" : routePath;
             const newPath = joinPaths(pathPrefix, routePath);
             const newKey = `${newPath}/${method}`;
 
@@ -66,7 +54,8 @@ export const Router = (): RouterInstance => {
       if (middlewares.length > 0) {
         const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
         methods.forEach((method) => {
-          const key = `${joinPaths(pathPrefix)}/${method}`;
+          const normalizedPrefix = pathPrefix === "/" ? "" : pathPrefix;
+          const key = `${joinPaths(normalizedPrefix)}/${method}`;
           const existingHandlers = routes.get(key) || [];
           routes.set(key, [...middlewares, ...existingHandlers]);
         });
@@ -78,31 +67,36 @@ export const Router = (): RouterInstance => {
   };
 
   const get = (path: string, ...handlers: Handler[]) => {
-    const key = `${path}/GET`;
+    const normalizedPath = path === "/" ? "" : path.replace(/\/+$/, "");
+    const key = `${normalizedPath}/GET`;
     const existing = routes.get(key) || [];
     routes.set(key, [...existing, ...handlers]);
   };
 
   const post = (path: string, ...handlers: Handler[]) => {
-    const key = `${path}/POST`;
+    const normalizedPath = path === "/" ? "" : path.replace(/\/+$/, "");
+    const key = `${normalizedPath}/POST`;
     const existing = routes.get(key) || [];
     routes.set(key, [...existing, ...handlers]);
   };
 
   const put = (path: string, ...handlers: Handler[]) => {
-    const key = `${path}/PUT`;
+    const normalizedPath = path === "/" ? "" : path.replace(/\/+$/, "");
+    const key = `${normalizedPath}/PUT`;
     const existing = routes.get(key) || [];
     routes.set(key, [...existing, ...handlers]);
   };
 
   const patch = (path: string, ...handlers: Handler[]) => {
-    const key = `${path}/PATCH`;
+    const normalizedPath = path === "/" ? "" : path.replace(/\/+$/, "");
+    const key = `${normalizedPath}/PATCH`;
     const existing = routes.get(key) || [];
     routes.set(key, [...existing, ...handlers]);
   };
 
   const del = (path: string, ...handlers: Handler[]) => {
-    const key = `${path}/DELETE`;
+    const normalizedPath = path === "/" ? "" : path.replace(/\/+$/, "");
+    const key = `${normalizedPath}/DELETE`;
     const existing = routes.get(key) || [];
     routes.set(key, [...existing, ...handlers]);
   };
