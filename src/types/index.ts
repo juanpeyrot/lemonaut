@@ -1,2 +1,2 @@
 export { Parser } from './parser';
-export { LemonautApp, Middleware, Handler, NextFunction, RouterInstance } from './types';
+export { LemonautApp, Middleware, Handler, NextFunction, RouterInstance, IRequest, IResponse } from './types';

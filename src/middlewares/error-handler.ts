@@ -1,7 +1,6 @@
 import { HttpStatus } from "../constants";
 import { HttpError } from "../errors";
-import { Middleware, NextFunction } from "../types";
-import { IRequest, IResponse } from "./";
+import { Middleware, NextFunction, IRequest, IResponse } from "../types";
 
 export const ErrorHandler: Middleware = async (
   req: IRequest,

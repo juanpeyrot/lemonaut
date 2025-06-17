@@ -1,5 +1,5 @@
 import { match, MatchFunction } from "path-to-regexp";
-import { RouteHandler } from "../types";
+import { RouteHandler } from "../types/types";
 
 export const matchUrl = (
   parsedUrl: string,

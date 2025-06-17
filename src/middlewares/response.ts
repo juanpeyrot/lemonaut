@@ -1,14 +1,8 @@
 import { ServerResponse, IncomingMessage } from "http";
 import { Middleware, NextFunction } from "../types";
+import { IResponse } from "../types/types";
 import ejs from "ejs";
 import path from "path";
-
-export interface IResponse extends ServerResponse<IncomingMessage> {
-  status: (code: number) => IResponse;
-  json: (data: any) => void;
-  send: (data: any) => Promise<void>;
-  render: (templatePath: string, data: any) => Promise<void>;
-}
 
 export const Response: Middleware = (
   req: IncomingMessage,

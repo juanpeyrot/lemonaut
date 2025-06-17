@@ -1,5 +1,4 @@
-import { IRequest, IResponse } from "../middlewares";
-import { Middleware, NextFunction } from "../types";
+import { IRequest, IResponse, Middleware, NextFunction } from "../types";
 import { Parser } from "../types";
 import { registerParser } from "./registry";
 

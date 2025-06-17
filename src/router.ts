@@ -1,10 +1,9 @@
 import {
   Handler,
   Middleware,
-  MiddlewareOrRouter,
-  RouteMap,
   RouterInstance,
 } from "./types";
+import { MiddlewareOrRouter, RouteMap } from "./types/types";
 
 export const Router = (): RouterInstance => {
   const routes: RouteMap = new Map();

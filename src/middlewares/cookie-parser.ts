@@ -1,5 +1,4 @@
-import { IRequest, IResponse } from "./";
-import { Middleware, NextFunction } from "../types";
+import { IRequest, IResponse, Middleware, NextFunction } from "../types";
 
 export const CookieParser = (): Middleware => {
   return (req: IRequest, _res: IResponse, next: NextFunction) => {

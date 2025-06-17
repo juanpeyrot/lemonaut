@@ -1,6 +1,5 @@
-import { IRequest } from "../middlewares/request";
-import { IResponse } from "../middlewares/response";
-import { Handler, Middleware, RouteHandler } from "../types";
+import { Handler, Middleware, IRequest, IResponse } from "../types";
+import { RouteHandler } from "../types/types";
 
 export const dispatchChain = (
   request: IRequest,

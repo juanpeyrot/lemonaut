@@ -1,6 +1,6 @@
 import { createServer } from "http";
 import { LemonautApp, RouterInstance } from "./types";
-import { Request, IRequest, Response, IResponse } from "./middlewares";
+import { Request, Response } from "./middlewares";
 import { dispatchChain, matchUrl } from "./utils";
 import { Router } from "./router";
 import { readdir } from "fs/promises";
@@ -8,6 +8,7 @@ import fs, { createReadStream } from "fs";
 import { pipeline } from "stream/promises";
 import path from "path";
 import mime from "mime-types";
+import { IRequest, IResponse } from "./types";
 
 export const lemonaut = (): LemonautApp => {
   const internalRouter = Router();

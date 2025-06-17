@@ -1,6 +1,4 @@
 import { IncomingMessage, Server, ServerResponse } from "http";
-import { IRequest } from "../middlewares/request";
-import { IResponse } from "../middlewares/response";
 
 interface BaseHttpMethods {
   get: (path: string, ...handlers: Handler[]) => void;
@@ -46,4 +44,22 @@ export interface UploadedFile {
   filename: string;
   mime: string;
   buffer: Buffer;
+}
+
+export interface IResponse extends ServerResponse<IncomingMessage> {
+	status: (code: number) => IResponse;
+	json: (data: any) => void;
+	send: (data: any) => Promise<void>;
+	render: (templatePath: string, data: any) => Promise<void>;
+}
+
+export type Params = Record<string, string>;
+export type Query = Record<string, string | string[]>;
+
+export interface IRequest extends IncomingMessage {
+  params?: Params;
+  query?: Query;
+  body?: string | Record<string, any>;
+  cookies?: Record<string, string>;
+	files?: UploadedFile[];
 }

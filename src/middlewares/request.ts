@@ -1,18 +1,7 @@
-import { IncomingMessage, ServerResponse } from "http";
+import { ServerResponse } from "http";
 import { match, MatchFunction } from "path-to-regexp";
+import { IRequest, Query } from "../types/types";
 import { parse } from "url";
-import { UploadedFile } from "../types";
-
-export type Params = Record<string, string>;
-export type Query = Record<string, string | string[]>;
-
-export interface IRequest extends IncomingMessage {
-  params?: Params;
-  query?: Query;
-  body?: string | Record<string, any>;
-  cookies?: Record<string, string>;
-	files?: UploadedFile[];
-}
 
 type MiddlewareWithRoutes = (
   routes: IterableIterator<string>,
