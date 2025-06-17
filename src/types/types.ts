@@ -12,7 +12,7 @@ interface BaseHttpMethods {
   useMany: (...handlers: Middleware[]) => void;
 }
 
-export interface AppInstance extends BaseHttpMethods {
+export interface LemonautApp extends BaseHttpMethods {
   useRouter: (path: string, router: RouterInstance) => void;
   serveStatic: (folderPath: string) => Promise<void>;
   startMission: (port: number) => Server<typeof IncomingMessage, typeof ServerResponse>;

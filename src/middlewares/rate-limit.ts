@@ -9,7 +9,7 @@ interface RateLimitOptions {
 
 export const ipMap = new Map<string, { count: number; start: number }>();
 
-export const rateLimit = (options?: RateLimitOptions): Middleware => {
+export const RateLimit = (options?: RateLimitOptions): Middleware => {
   const windowMs = options?.windowMs ?? 60_000;
   const max = options?.max ?? 60;
   const message = options?.message ?? "Too many requests";

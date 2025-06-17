@@ -1,5 +1,5 @@
 import { createServer } from "http";
-import { AppInstance, RouterInstance } from "./types";
+import { LemonautApp, RouterInstance } from "./types";
 import { Request, IRequest, Response, IResponse } from "./middlewares";
 import { dispatchChain, matchUrl } from "./utils";
 import { Router } from "./router";
@@ -9,7 +9,7 @@ import { pipeline } from "stream/promises";
 import path from "path";
 import mime from "mime-types";
 
-export const lemonaut = (): AppInstance => {
+export const lemonaut = (): LemonautApp => {
   const internalRouter = Router();
 
   const normalizePath = (

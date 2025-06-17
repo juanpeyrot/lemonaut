@@ -2,9 +2,23 @@
   "name": "lemonaut",
   "version": "1.0.0",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    },
+    "./errors": {
+      "import": "./dist/errors/index.js"
+    },
+    "./middlewares": {
+      "import": "./dist/middlewares/index.js"
+    },
+    "./types": {
+      "import": "./dist/types/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "dev": "tsnd --respawn --clear index.ts",
+    "dev": "tsnd --respawn --clear src/index2.ts",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && node dist/app.js",
     "test": "vitest run",

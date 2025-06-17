@@ -1,6 +1,6 @@
 import { Middleware } from "../types";
 
-export const security: Middleware = (req, res, next) => {
+export const Security: Middleware = (req, res, next) => {
   res.setHeader("X-DNS-Prefetch-Control", "off");
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("X-Content-Type-Options", "nosniff");

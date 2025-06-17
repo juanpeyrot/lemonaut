@@ -15,7 +15,7 @@ export interface RequestWithFiles extends IncomingMessage {
   files?: MultipartFile[];
 }
 
-export const multipart: Middleware = (
+export const Multipart: Middleware = (
   req,
   res,
   next,
