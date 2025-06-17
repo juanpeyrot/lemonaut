@@ -1,12 +1,8 @@
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { Readable } from "stream";
 import Busboy from "busboy";
-import {
-  multipart,
-  MultipartFile,
-  RequestWithFiles,
-} from "../../src/middlewares";
 import { IncomingMessage } from "http";
+import { Multipart, MultipartFile, RequestWithFiles } from "../../src/middlewares/multipart-parser";
 
 vi.mock("busboy", () => {
   return {
@@ -39,7 +35,7 @@ describe("multipart middleware", () => {
     const res = {} as any;
     const next = vi.fn();
 
-    multipart(req, res, next);
+    Multipart(req, res, next);
 
     expect(next).toHaveBeenCalledOnce();
     expect(Busboy).not.toHaveBeenCalled();
@@ -54,7 +50,7 @@ describe("multipart middleware", () => {
     const res = {} as any;
     const next = vi.fn();
 
-    multipart(req, res, next);
+    Multipart(req, res, next);
 
     expect(Busboy).toHaveBeenCalledWith({ headers: req.headers });
     expect(req.pipe).toHaveBeenCalledWith(busboyInstanceMock);
@@ -110,7 +106,7 @@ describe("multipart middleware", () => {
     } as any;
     const next = vi.fn();
 
-    multipart(req, res, next);
+    Multipart(req, res, next);
 
     const error = new Error("Test error");
     busboyOnCallbacks["error"].forEach((cb) => cb(error));

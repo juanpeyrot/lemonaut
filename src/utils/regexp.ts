@@ -1,20 +1,27 @@
-import { match, MatchFunction } from "path-to-regexp";
-import { RouteHandler } from "../types/types";
+import { match } from "path-to-regexp";
 
 export const matchUrl = (
-  parsedUrl: string,
-  routes: Map<string, RouteHandler[]>
-): string | false => {
-  for (const path of routes.keys()) {
-    const urlMatch: MatchFunction<Record<string, string>> = match(path, {
-      decode: decodeURIComponent,
-    });
+  urlKey: string,
+  routeMap: Map<string, any>
+): string | null => {
+  for (const routeKey of routeMap.keys()) {
+    const parts = routeKey.split("/");
+    const method = parts.pop();
+    const routePath = "/" + parts.join("/");
 
-    const found = urlMatch(parsedUrl);
+    const urlParts = urlKey.split("/");
+    const urlMethod = urlParts.pop();
+    const urlPath = "/" + urlParts.join("/");
 
-    if (found) {
-      return path;
+    if (method !== urlMethod) continue;
+
+    const matcher = match(routePath, { decode: decodeURIComponent });
+    const matched = matcher(urlPath);
+
+    if (matched) {
+      return routeKey;
     }
   }
-  return false;
+
+  return null;
 };

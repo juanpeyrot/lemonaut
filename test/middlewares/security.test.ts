@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
-import { IncomingMessage, ServerResponse } from "http";
-import { security } from "../../src/middlewares/security";
-import { IResponse } from "../../src/middlewares";
+import { IncomingMessage } from "http";
+import { IResponse } from "../../src/types";
+import { Security } from "../../src/middlewares";
 
 describe("security middleware", () => {
   it("sets security headers and calls next", () => {
@@ -14,7 +14,7 @@ describe("security middleware", () => {
 
     const next = vi.fn();
 
-    security(req, res, next);
+    Security(req, res, next);
 
     expect(setHeader).toHaveBeenCalledWith("X-DNS-Prefetch-Control", "off");
     expect(setHeader).toHaveBeenCalledWith("X-Frame-Options", "DENY");

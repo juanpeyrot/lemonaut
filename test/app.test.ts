@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import { lemonaut } from "../src/app";
 import { makeFetch } from "supertest-fetch";
 import fs from "fs";

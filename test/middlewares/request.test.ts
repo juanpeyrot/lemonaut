@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
-import { Request, IRequest } from "../../src/middlewares/request";
+import { Request } from "../../src/middlewares/request";
 import { ServerResponse } from "http";
+import { IRequest } from "../../src/types";
 
 describe("Request middleware", () => {
   it("should extract route params and query params", () => {

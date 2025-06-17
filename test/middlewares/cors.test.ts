@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { CORS } from "../../src/middlewares/cors";
-import { IRequest, IResponse } from "../../src/middlewares";
+import { IRequest, IResponse } from "../../src/types";
 
 const createMockReqRes = (headers = {}, method = "GET") => {
   const req = {

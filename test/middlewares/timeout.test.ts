@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { timeout } from "../../src/middlewares";
+import { Timeout } from "../../src/middlewares";
 
 describe("timeout middleware", () => {
   let mockReq: any;
@@ -27,7 +27,7 @@ describe("timeout middleware", () => {
   });
 
   it("should timeout if request takes too long", () => {
-    const middleware = timeout(1000);
+    const middleware = Timeout(1000);
     middleware(mockReq, mockRes, mockNext);
 
     vi.advanceTimersByTime(1001);
@@ -45,7 +45,7 @@ describe("timeout middleware", () => {
   });
 
   it("should not timeout if response ends first", () => {
-    const middleware = timeout(1000);
+    const middleware = Timeout(1000);
     middleware(mockReq, mockRes, mockNext);
 
     mockRes.end("response data");
@@ -60,7 +60,7 @@ describe("timeout middleware", () => {
   });
 
   it("should clear timeout when response ends", () => {
-    const middleware = timeout(1000);
+    const middleware = Timeout(1000);
     middleware(mockReq, mockRes, mockNext);
 
     mockRes.end();
@@ -74,7 +74,7 @@ describe("timeout middleware", () => {
   });
 
   it("should use default timeout of 10000ms when no value provided", () => {
-    const middleware = timeout();
+    const middleware = Timeout();
     middleware(mockReq, mockRes, mockNext);
 
     vi.advanceTimersByTime(9999);
@@ -86,14 +86,14 @@ describe("timeout middleware", () => {
   it("should do nothing if response has already ended before timeout", () => {
     mockRes.writableEnded = true;
 
-    const middleware = timeout(1000);
+    const middleware = Timeout(1000);
     middleware(mockReq, mockRes, mockNext);
 
     vi.advanceTimersByTime(1001);
     expect(endSpy).not.toHaveBeenCalled();
   });
   it("should respect different timeout limits", () => {
-    const middleware = timeout(500);
+    const middleware = Timeout(500);
     middleware(mockReq, mockRes, mockNext);
 
     vi.advanceTimersByTime(499);
@@ -104,7 +104,7 @@ describe("timeout middleware", () => {
   });
 
   it("should set Content-Type to application/json on timeout", () => {
-    const middleware = timeout(1000);
+    const middleware = Timeout(1000);
     middleware(mockReq, mockRes, mockNext);
 
     vi.advanceTimersByTime(1001);
@@ -114,7 +114,7 @@ describe("timeout middleware", () => {
     );
   });
   it("calls originalEnd with chunk if chunk is a function", () => {
-    const middleware = timeout(1000);
+    const middleware = Timeout(1000);
     middleware(mockReq, mockRes, mockNext);
 
     const func = vi.fn();
@@ -124,7 +124,7 @@ describe("timeout middleware", () => {
   });
 
   it("calls originalEnd with chunk and encoding if encoding is a function", () => {
-    const middleware = timeout(1000);
+    const middleware = Timeout(1000);
     middleware(mockReq, mockRes, mockNext);
 
     const chunk = "data";

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as registry from "../../src/parsers/registry";
-import { BodyParser, IRequest, IResponse } from "../../src/middlewares";
+import { BodyParser } from "../../src/middlewares";
+import { IRequest, IResponse } from "../../src/types";
 
 describe("BodyParser Middleware", () => {
   beforeEach(() => {

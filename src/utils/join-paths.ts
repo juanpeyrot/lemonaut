@@ -1,8 +1,4 @@
-export const joinPaths = (...segments: string[]): string => {
-  const joined = segments
-    .map(s => s.replace(/^\/+|\/+$/g, ''))
-    .filter(Boolean)
-    .join('/');
-  
-  return joined ? `/${joined}` : '/';
+export const joinPaths = (...paths: string[]) => {
+  const full = paths.join("/").replace(/\/+/g, "/");
+  return full.endsWith("/") && full !== "/" ? full.slice(0, -1) : full;
 };

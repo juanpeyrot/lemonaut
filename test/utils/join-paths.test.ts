@@ -3,7 +3,7 @@ import { joinPaths } from "../../src/utils";
 
 describe("joinPaths", () => {
   it("should join simple segments", () => {
-    expect(joinPaths("users", "123")).toBe("/users/123");
+    expect(joinPaths("users", "123")).toBe("users/123");
   });
 
   it("should remove leading and trailing slashes", () => {
@@ -23,6 +23,6 @@ describe("joinPaths", () => {
   });
 
   it("should handle already clean input", () => {
-    expect(joinPaths("a", "b", "c")).toBe("/a/b/c");
+    expect(joinPaths("a", "b", "c")).toBe("a/b/c");
   });
 });

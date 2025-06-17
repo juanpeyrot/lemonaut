@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { CookieParser, IRequest, IResponse } from "../../src/middlewares";
-import { NextFunction } from "../../src/types";
+import { CookieParser } from "../../src/middlewares";
+import { IRequest, IResponse, NextFunction } from "../../src/types";
 
 describe("CookieParser middleware", () => {
   const createMockReq = (cookieHeader?: string): IRequest => {

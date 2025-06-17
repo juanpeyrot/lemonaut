@@ -1,8 +1,9 @@
 import { describe, it, beforeEach, expect, vi } from "vitest";
-import { IncomingMessage, ServerResponse } from "http";
-import { Response, IResponse } from "../../src/middlewares/response";
+import { IncomingMessage } from "http";
+import { Response  } from "../../src/middlewares/response";
 import path from "path";
 import ejs from "ejs";
+import { IResponse } from "../../src/types";
 
 vi.mock("ejs", () => ({
   default: {

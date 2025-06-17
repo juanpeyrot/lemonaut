@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { HttpError } from "../../src/errors";
-import { ErrorHandler, IRequest, IResponse } from "../../src/middlewares";
+import { ErrorHandler } from "../../src/middlewares";
+import { IRequest, IResponse } from "../../src/types";
 
 const createMockRes = () => {
   const res = {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { Logger } from "../../src/middlewares/logger";
-import { IRequest, IResponse } from "../../src/middlewares";
 import { EventEmitter } from "events";
+import { IRequest, IResponse } from "../../src/types";
 
 const createMockReq = (overrides = {}): IRequest =>
   ({

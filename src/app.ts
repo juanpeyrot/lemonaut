@@ -1,7 +1,7 @@
 import { createServer } from "http";
 import { LemonautApp, RouterInstance } from "./types";
 import { Request, Response } from "./middlewares";
-import { dispatchChain, matchUrl } from "./utils";
+import { dispatchChain, joinPaths, matchUrl } from "./utils";
 import { Router } from "./router";
 import { readdir } from "fs/promises";
 import fs, { createReadStream } from "fs";
@@ -32,7 +32,8 @@ export const lemonaut = (): LemonautApp => {
   const useRouter = (base: string, router: RouterInstance) => {
     const externalRoutes = router.getRoutes();
     externalRoutes.forEach((handlers, key) => {
-      const fullPath = `${base}${key}`;
+      const fullPath = joinPaths(base, key);
+
       const existing = internalRouter.getRoutes().get(fullPath) || [];
       internalRouter.getRoutes().set(fullPath, [...existing, ...handlers]);
     });
@@ -133,7 +134,7 @@ export const lemonaut = (): LemonautApp => {
       console.log(`🚀 Server running on PORT: ${port}`);
     });
 
-		return server;
+    return server;
   };
 
   return {

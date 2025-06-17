@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { IncomingMessage } from "http";
-import { ipMap, IResponse, rateLimit } from "../../src/middlewares";
+import { IResponse } from "../../src/types";
+import { ipMap, RateLimit } from "../../src/middlewares/rate-limit";
 
-describe("rateLimit middleware", () => {
+describe("RateLimit middleware", () => {
   let req: IncomingMessage;
   let res: IResponse;
   let next: ReturnType<typeof vi.fn>;
@@ -23,7 +24,7 @@ describe("rateLimit middleware", () => {
   });
 
   it("allows requests below the limit", () => {
-    const middleware = rateLimit({ max: 2, windowMs: 1000 });
+    const middleware = RateLimit({ max: 2, windowMs: 1000 });
 
     middleware(req, res, next);
     middleware(req, res, next);
@@ -33,7 +34,7 @@ describe("rateLimit middleware", () => {
   });
 
   it("blocks requests above the limit", () => {
-    const middleware = rateLimit({ max: 1, windowMs: 1000 });
+    const middleware = RateLimit({ max: 1, windowMs: 1000 });
 
     middleware(req, res, next);
     middleware(req, res, next);
@@ -45,7 +46,7 @@ describe("rateLimit middleware", () => {
   });
 
 	it("resets counter and clears old entries when window expires", () => {
-  const middleware = rateLimit({ max: 2, windowMs: 1000 });
+  const middleware = RateLimit({ max: 2, windowMs: 1000 });
 
   const oldTime = Date.now() - 2000;
   ipMap.set("1.2.3.4", { count: 5, start: oldTime });
@@ -61,7 +62,7 @@ describe("rateLimit middleware", () => {
 });
 
 it("uses default options when none are provided", () => {
-  const middleware = rateLimit();
+  const middleware = RateLimit();
 
   middleware(req, res, next);
 
@@ -69,7 +70,7 @@ it("uses default options when none are provided", () => {
 });
 
 it("uses 'unknown' as IP if req.socket.remoteAddress is undefined", () => {
-  const middleware = rateLimit({ max: 1, windowMs: 1000 });
+  const middleware = RateLimit({ max: 1, windowMs: 1000 });
 
   req.socket = {} as any;
   middleware(req, res, next);

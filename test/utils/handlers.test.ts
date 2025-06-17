@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { IRequest, IResponse } from "../../src/middlewares";
 import { dispatchChain } from "../../src/utils";
+import { IRequest, IResponse } from "../../src/types";
 
 describe("dispatchChain", () => {
   const createMockReqRes = (): [IRequest, IResponse] => {

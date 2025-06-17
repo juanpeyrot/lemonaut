@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { JSONParser } from "../../src/parsers/json";
 import * as registry from "../../src/parsers/registry";
-import type { IRequest, IResponse } from "../../src/middlewares";
+import { IRequest, IResponse } from "../../src/types";
 
 describe("JSONParserImpl", () => {
   const rawBody = '{"foo":"bar"}';

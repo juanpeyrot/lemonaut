@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import type { RouteHandler } from "../../src/types";
 import { matchUrl } from "../../src/utils";
+import { RouteHandler } from "../../src/types/types";
 
 describe("matchUrl", () => {
   const dummyHandler: RouteHandler = (req, res) => res.end("ok");
@@ -23,13 +23,13 @@ describe("matchUrl", () => {
     expect(result).toBe("/user/:id/GET");
   });
 
-  it("should return false if no match is found", () => {
+  it("should return null if no match is found", () => {
     const routes = new Map<string, RouteHandler[]>([
       ["/about/GET", [dummyHandler]],
     ]);
 
     const result = matchUrl("/contact/GET", routes);
-    expect(result).toBe(false);
+    expect(result).toBe(null);
   });
 
   it("should match route with multiple params", () => {

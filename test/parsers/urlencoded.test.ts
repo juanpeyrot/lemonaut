@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { URLEncodedParser } from "../../src/parsers/urlEncoded";
 import * as registry from "../../src/parsers/registry";
+import { URLEncodedParser } from "../../src/middlewares";
 
 describe("URLEncodedParser", () => {
   const rawBody = "foo=bar&num=42";
