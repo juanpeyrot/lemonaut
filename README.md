@@ -45,7 +45,7 @@ app.startMission(3000); // 🚀
 ```
 
 📚 Full documentation is available at:
-👉 https://juanpeyrot.github.io/lemonaut/
+👉 https://lemonaut-docs.vercel.app/
 
 Explore guides, architecture, best practices, and examples in one beautiful and searchable interface.
 
