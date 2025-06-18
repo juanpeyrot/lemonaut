@@ -1,3 +1,3 @@
-export * from './handlers';
-export * from './join-paths';
-export * from './regexp';
+export * from './handlers.js';
+export * from './join-paths.js';
+export * from './regexp.js';

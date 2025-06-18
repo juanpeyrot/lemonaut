@@ -1,6 +1,6 @@
 import { ServerResponse, IncomingMessage } from "http";
-import { Middleware, NextFunction } from "../types";
-import { IResponse } from "../types/types";
+import { Middleware, NextFunction } from "../types/index.js";
+import { IResponse } from "../types/types.js";
 import ejs from "ejs";
 import path from "path";
 

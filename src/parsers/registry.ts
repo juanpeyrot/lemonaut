@@ -1,4 +1,4 @@
-import { Parser } from "../types";
+import { Parser } from "../types/index.js";
 
 const registeredParsers: Parser[] = [];
 

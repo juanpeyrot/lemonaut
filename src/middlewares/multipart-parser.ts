@@ -1,5 +1,5 @@
 import { IncomingMessage } from "http";
-import { Middleware } from "../types";
+import { Middleware } from "../types/index.js";
 import { Readable } from "stream";
 import Busboy from "busboy";
 

@@ -1,6 +1,6 @@
-import { IRequest, IResponse, Middleware, NextFunction } from "../types";
-import { Parser } from "../types";
-import { registerParser } from "./registry";
+import { IRequest, IResponse, Middleware, NextFunction } from "../types/index.js";
+import { Parser } from "../types/index.js";
+import { registerParser } from "./registry.js";
 
 const JSONParserImpl: Parser = (contentType, rawBody) => {
   if (contentType.includes("application/json")) {

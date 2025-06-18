@@ -1,5 +1,5 @@
-import { getRegisteredParsers } from "../parsers/registry";
-import { Middleware, NextFunction, IRequest, IResponse } from "../types";
+import { getRegisteredParsers } from "../parsers/registry.js";
+import { Middleware, NextFunction, IRequest, IResponse } from "../types/index.js";
 
 export const BodyParser: Middleware = async (
   req: IRequest,

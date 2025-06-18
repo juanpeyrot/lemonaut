@@ -1,4 +1,4 @@
-import { IRequest, IResponse, Middleware, NextFunction } from "../types";
+import { IRequest, IResponse, Middleware, NextFunction } from "../types/index.js";
 
 interface CORSOptions {
   origin?: string | string[];

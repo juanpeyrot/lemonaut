@@ -1,14 +1,14 @@
 import { createServer } from "http";
-import { LemonautApp, RouterInstance } from "./types";
-import { Request, Response } from "./middlewares";
-import { dispatchChain, joinPaths, matchUrl } from "./utils";
-import { Router } from "./router";
+import { LemonautApp, RouterInstance } from "./types/index.js";
+import { Request, Response } from "./middlewares/index.js";
+import { dispatchChain, joinPaths, matchUrl } from "./utils/index.js";
+import { Router } from "./router.js";
 import { readdir } from "fs/promises";
 import fs, { createReadStream } from "fs";
 import { pipeline } from "stream/promises";
 import path from "path";
 import mime from "mime-types";
-import { IRequest, IResponse } from "./types";
+import { IRequest, IResponse } from "./types/index.js";
 
 export const lemonaut = (): LemonautApp => {
   const internalRouter = Router();

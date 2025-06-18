@@ -1,4 +1,4 @@
-import { IRequest, IResponse, Middleware, NextFunction } from "../types";
+import { IRequest, IResponse, Middleware, NextFunction } from "../types/index.js";
 
 const getIP = (req: IRequest): string => {
   const getHeaderAsString = (header: string | string[] | undefined): string => {

@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { Middleware, NextFunction } from "../types";
+import { Middleware, NextFunction } from "../types/index.js";
 
 interface RateLimitOptions {
   windowMs?: number;

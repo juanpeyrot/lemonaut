@@ -1,4 +1,4 @@
-import { Middleware } from "../types";
+import { Middleware } from "../types/index.js";
 
 export const Security: Middleware = (req, res, next) => {
   res.setHeader("X-DNS-Prefetch-Control", "off");

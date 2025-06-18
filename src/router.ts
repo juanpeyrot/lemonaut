@@ -1,6 +1,6 @@
-import { Handler, Middleware, RouterInstance } from "./types";
-import { MiddlewareOrRouter, RouteMap } from "./types/types";
-import { joinPaths } from "./utils";
+import { Handler, Middleware, RouterInstance } from "./types/index.js";
+import { MiddlewareOrRouter, RouteMap } from "./types/types.js";
+import { joinPaths } from "./utils/index.js";
 
 export const Router = (): RouterInstance => {
   const routes: RouteMap = new Map();

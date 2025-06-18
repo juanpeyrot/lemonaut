@@ -1,5 +1,5 @@
-import { HttpStatus } from "../../constants/http-status";
-import { HttpError } from "../http-error";
+import { HttpStatus } from "../../constants/index.js";
+import { HttpError } from "../http-error.js";
 
 export class PayloadTooLargeError extends HttpError {
   constructor(message = "Payload Too Large", details?: any) {

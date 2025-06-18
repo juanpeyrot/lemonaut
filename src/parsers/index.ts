@@ -1,3 +1,3 @@
-export * from "./json";
-export * from "./urlencoded";
-export * from "./registry";
+export * from "./json.js";
+export * from "./urlencoded.js";
+export * from "./registry.js";

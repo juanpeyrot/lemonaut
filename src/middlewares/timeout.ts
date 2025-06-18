@@ -1,4 +1,4 @@
-import { Middleware } from "../types";
+import { Middleware } from "../types/index.js";
 
 export const Timeout = (limitMs = 10000): Middleware => {
   return (req, res, next) => {

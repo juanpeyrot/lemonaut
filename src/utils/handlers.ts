@@ -1,5 +1,5 @@
-import { Handler, Middleware, IRequest, IResponse } from "../types";
-import { RouteHandler } from "../types/types";
+import { Handler, Middleware, IRequest, IResponse } from "../types/index.js";
+import { RouteHandler } from "../types/types.js";
 
 export const dispatchChain = (
   request: IRequest,

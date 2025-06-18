@@ -1,6 +1,6 @@
 import { ServerResponse } from "http";
 import { match, MatchFunction } from "path-to-regexp";
-import { IRequest, Query } from "../types/types";
+import { IRequest, Query } from "../types/types.js";
 import { parse } from "url";
 
 type MiddlewareWithRoutes = (
