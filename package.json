@@ -23,7 +23,7 @@
       "require": "./dist/types/index.d.js"
     }
   },
-	"files": [
+  "files": [
     "dist",
     "README.md"
   ],
@@ -35,6 +35,11 @@
     "microframework",
     "typescript"
   ],
+	"homepage": "https://lemonaut-docs.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juanpeyrot/lemonaut.git"
+  },
   "author": "Juan Peyrot",
   "license": "MIT",
   "scripts": {
