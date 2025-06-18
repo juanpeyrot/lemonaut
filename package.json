@@ -1,34 +1,46 @@
 {
   "name": "lemonaut",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./errors": {
-      "import": "./dist/errors/index.js"
+      "import": "./dist/errors/index.js",
+      "require": "./dist/errors/index.js"
     },
     "./middlewares": {
-      "import": "./dist/middlewares/index.js"
+      "import": "./dist/middlewares/index.js",
+      "require": "./dist/middlewares/index.js"
     },
     "./types": {
-      "import": "./dist/types/index.js"
+      "import": "./dist/types/index.d.js",
+      "require": "./dist/types/index.d.js"
     }
   },
-  "types": "./dist/index.d.ts",
+  "description": "Juicy microframework for REST APIs in Node.js",
+  "keywords": [
+    "framework",
+    "node",
+    "rest",
+    "microframework",
+    "typescript"
+  ],
+  "author": "Juan Peyrot",
+  "license": "MIT",
   "scripts": {
-    "dev": "tsnd --respawn --clear src/index2.ts",
+    "dev": "tsnd --respawn --clear src/index.ts",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && node dist/app.js",
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "coverage": "vitest run --coverage"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@types/busboy": "^1.5.4",
     "@types/ejs": "^3.1.5",
